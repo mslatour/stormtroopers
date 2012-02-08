@@ -1,0 +1,41 @@
+body {padding: 50px 0 0 0;}
+
+form.flushleft { padding-left: 0}
+form.flushleft .actions { margin-left: 0}
+
+.light {color: #888}
+
+/**********
+ STRUCTURE
+**********/
+
+form.openid ul { text-align:center; list-style-type:none; display:inline;}
+form.openid ul li {float:left; padding:5px 5px 0px;}
+form.openid ul li span {padding:0 3px 0 3px}
+form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #FD6}
+
+form.openid fieldset {clear: both; font-size: 16px;}
+form.openid fieldset .urlentry { width: 340px; height: 40px;  float: left;}
+form.openid fieldset div > * {float: left; display: block; }
+
+form.openid label 	{ width: 200px; margin-bottom:.5em; float: left; padding: 4px 0 0;
+					  text-align: left; font-size: inherit; font-weight:bold; }
+.openid_logo{color:#F7931E;padding:6px 0px 8px 28px; background: url(openidims/openidico.png) no-repeat 0 1px; }
+form.openid input[type='text'] {font-size: inherit; }
+form.openid span  {height: 25px; padding-top: 10px; }
+
+.openid-input-user {width: 100px;}
+.openid-input-url {width: 300px;}
+
+
+#active-agent-select select {width: 100% }
+
+.CodeMirror-scroll {
+  height: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
+  width: 100%
+}
+
+table .aright { text-align: right; }
+table .acenter { text-align: center; }
