@@ -1,10 +1,29 @@
 import domination.run
 import sys
 
+DEFAULT_RUN_SETTINGS = {
+  'mode': "default",
+  'verbose': "True",
+  'render': "True"
+}
+
 class MyScenario(domination.run.Scenario):
   EPISODES = 10
 
-def run(mode):
+def applySettings(args):
+  settings = DEFAULT_RUN_SETTINGS
+  name = None
+  value = None
+  for arg in args[1:]:
+    if arg[0:2] == "--":
+      name = arg[2:]
+    elif name is not None:
+      settings[name] = arg
+      name == None
+  return settings
+
+def run(settings):
+  mode = settings["mode"]
   if mode == "sander":
     MyScenario.test('trooper_sander.py', 'domination/agent.py')
   elif mode == "frank":
@@ -17,7 +36,15 @@ def run(mode):
     MyScenario.test('trooper.py', 'domination/agent.py')
 
 if __name__ == "__main__":
-  if len(sys.argv) == 1:
-    print "Usage: python application.py <mode>"
+  if len(sys.argv) == 2 and sys.argv[1] == "--help":
+    print "Usage: python application.py [<settings>]"
+    print " Settings:"
+    print " ---------------------------------------------------------------"
+    print " | Setting:  | Default:  | Values:                             |"
+    print " ---------------------------------------------------------------"
+    print " | --mode    | default   | {default|sander|frank|daniel|sicco} |"
+    print " | --verbose | True      | {True|False}                        |"
+    print " | --render  | True      | {True|False}                        |"
+    print " ---------------------------------------------------------------"
   else:
-    run(sys.argv[1])
+    run(applySettings(sys.argv))
