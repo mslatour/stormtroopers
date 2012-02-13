@@ -33,11 +33,11 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__),'assets')
 
 C_RED               = (229,100,92)
 C_BLUE              = (81,142,221)
-SPF                 = 1/120.0 # Seconds per frame
+SPF                 = 1/30.0 # Seconds per frame
 ROTATION_FRAMES     = 6 # Number of frames for rotation animation
 SHOOTING_FRAMES     = 10 # Number of frames for shooting animation
 DRAW_BOUNDING_BOXES = False
-DRAW_NAV_MESH       = True
+DRAW_NAV_MESH       = False
 DRAW_IDS            = False
 
 ### CLASSES ###
@@ -309,7 +309,7 @@ class Renderer(object):
                 if event.buttons[0] and self.mouse_down:
                     rx,ry,rw,rh = self.selection_rect
                     self.selection_rect = (rx,ry,x-rx, y-ry)
-                    game.select_tanks(self.selection_rect,team=self.active_team)
+                    game._select_tanks(self.selection_rect,team=self.active_team)
             # Catch mouse release
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 self.mouse_down = False
@@ -331,6 +331,9 @@ class Renderer(object):
         while self.paused:
             self.render(game)
             self.handle_events(game)
+            
+    def quit(self):
+        pg.display.quit()
         
 ### HELPER FUNCTIONS ###
 def tile_fill(surface, bitmap, rect=None, area=None):

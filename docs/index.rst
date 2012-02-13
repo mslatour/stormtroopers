@@ -29,22 +29,23 @@ Quickstart
 
 If you're not going to read any of the other documentation, just do the following. 
 
-1. Modify or extend the basic agent found in the source code (`agent.py <https://github.com/noio/Domination-Game/blob/master/domination/agent.py>`_).
+1. Copy and modify the basic agent found in the source code (`agent.py <https://github.com/noio/Domination-Game/blob/master/domination/agent.py>`_).
 
-2. Import and extend the basic scenario::
+2. Make sure your folder structure looks like this (you only need the *domination* module):
 
-    import domination.run
+  .. image:: ims/folderstructure.png
+
+3. Create another file, put the following code in there, and run it::
+
+	from domination import core, run
     
-    class MyScenario(domination.run.Scenario):
-       EPISODES = 10
+	class MyScenario(run.Scenario):
+	   REPEATS = 10
+	   SETTINGS = core.Settings(max_steps=100)
+   
+	MyScenario.test(red='my_agent.py', blue='domination/agent.py')
+  
 
-3. Run the scenario::
-
-    MyScenario.test('myagent.py', 'domination/agent.py')
-
-4. Run it, this will save the results to a comma-separated-value file::
-    
-	ms.run()
 
 Indices and tables
 ==================
