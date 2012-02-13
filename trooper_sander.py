@@ -8,6 +8,8 @@ PEACE_THRESHOLD = 5
 # World knowledge
 NUM_AMMO_SPOTS = 6
 DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
+DEFAULT_FIELD_WIDTH = 41    # in case not provided in settings
+DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 
 # Behavior settings:
 SETTINGS_DEAD_CANT_THINK = True
@@ -24,6 +26,7 @@ SETTINGS_DEBUG_SHOW_MOTIVATION = True
 SETTINGS_DEBUG_SHOW_AMMO = True
 SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
+SETTINGS_DEBUG_SHOW_BASES = True
 
 #######################
 # Various motivations #
@@ -80,9 +83,6 @@ class Agent(object):
   # List of CPs in enemy hands
   enemyCPs = []
 
-  # Amount of turns (time steps)
-  time = 0
-
   # Ammo locations
   ammoSpots = []
     
@@ -105,12 +105,15 @@ class Agent(object):
     # Recommended way to share variables between agents.
     if id == 0:
       self.all_agents = self.__class__.all_agents = []
-      if self.settings.tilesize is not None:
-        tilesize = self.settings.tilesize
+
+      tilesize = getattr(self.settings, 'tilesize', DEFAULT_FIELD_TILESIZE)
+      if field_rects is None:
+        self.__class__.field_width = DEFAULT_FIELD_WIDTH*tilesize
+        self.__class__.field_height = DEFAULT_FIELD_HEIGHT*tilesize
       else:
-        tilesize = DEFAULT_FIELD_TILESIZE
-      self.__class__.field_width = len(field_grid[0])*tilesize
-      self.__class__.field_height = len(field_grid)*tilesize
+        self.__class__.field_width = len(field_grid[0])*tilesize
+        self.__class__.field_height = len(field_grid)*tilesize
+
       if SETTINGS_DEBUG_ON:
         self.debugMsg(
           "Field: %d x %d"
@@ -138,13 +141,13 @@ class Agent(object):
     # Set statistics for this turn
     # if current agent is the first
     if self.id == 0:
-      self.__class__.time += 1
       self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
       if self.__class__.home_base is None:
         self.debugMsg("Found home base at %s" % (obs.loc,))
         self.__class__.home_base = obs.loc
+        self.__class__.enemy_base = self.getSymmetricOpposite(obs.loc)
       self.debugMsg("Sleeping")
       return (0,0,0)
 
@@ -224,7 +227,12 @@ class Agent(object):
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
-      self.log.write("[%d-%f]: %s\n" % (self.__class__.time, time.time(), msg))
+      if hasattr(self, 'observation'):
+        self.log.write(
+          "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
+      else:
+        self.log.write(
+          "[?-%f]: %s\n" % (time.time(), msg))
       self.log.flush()
 
   def setTurnStats(self):
@@ -341,7 +349,7 @@ class Agent(object):
 
   def getPeaceValue(self, coord):
     if coord in self.__class__.inFriendlyHands:
-      return self.__class__.inFriendlyHands[coord]/float(self.__class__.time)
+      return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
     else:
       return 0
 
@@ -413,6 +421,8 @@ class Agent(object):
       if SETTINGS_DEBUG_ON:
         if SETTINGS_DEBUG_SHOW_PEACE_ZONES:
           self.drawPeaceZones(pygame, surface)
+        if SETTINGS_DEBUG_SHOW_BASES:
+          self.drawBases(pygame, surface)
         if SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS:
           self.drawKnownAmmoSpots(pygame, surface)
   
@@ -444,6 +454,13 @@ class Agent(object):
         (0,0,255)
       )
       surface.blit(txt, cp[0:2])
+
+  def drawBases(self, pygame, surface):
+    if self.__class__.home_base is not None:
+      font = pygame.font.Font(pygame.font.get_default_font(), 10)
+      txt = font.render("!", False, (255,255,255))
+      surface.blit(txt, self.__class__.home_base)
+      surface.blit(txt, self.__class__.enemy_base)
 
   def drawKnownAmmoSpots(self, pygame, surface):
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
