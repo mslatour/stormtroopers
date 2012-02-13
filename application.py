@@ -14,7 +14,7 @@ def run(mode):
   elif mode == "sicco":
     MyScenario.test('trooper_sicco.py', 'domination/agent.py')
   else:
-    print "Usage: python application.py <mode>"
+    MyScenario.test('trooper.py', 'domination/agent.py')
 
 if __name__ == "__main__":
   if len(sys.argv) == 1:
