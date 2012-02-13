@@ -7,6 +7,7 @@ PEACE_THRESHOLD = 5
 
 # World knowledge
 NUM_AMMO_SPOTS = 6
+DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
 
 # Behavior settings:
 SETTINGS_DEAD_CANT_THINK = True
@@ -104,6 +105,18 @@ class Agent(object):
     # Recommended way to share variables between agents.
     if id == 0:
       self.all_agents = self.__class__.all_agents = []
+      if self.settings.tilesize is not None:
+        tilesize = self.settings.tilesize
+      else:
+        tilesize = DEFAULT_FIELD_TILESIZE
+      self.__class__.field_width = len(field_grid[0])*tilesize
+      self.__class__.field_height = len(field_grid)*tilesize
+      if SETTINGS_DEBUG_ON:
+        self.debugMsg(
+          "Field: %d x %d"
+        % 
+          (self.__class__.field_width, self.__class__.field_height)
+        )
     self.all_agents.append(self)
   
   def observe(self, observation):
@@ -239,6 +252,15 @@ class Agent(object):
         inFriendlyHands[cp] = 1
     self.__class__.inFriendlyHands = inFriendlyHands
 
+  # Return the opposite coordinate given the
+  # symmetric property of the field
+  def getSymmetricOpposite(self, coord):
+    mid = round(self.__class__.field_width/2.0 + 0.5)
+    if coord[0] > mid:
+      return (mid-(coord[0]-mid), coord[1])
+    else:
+      return (mid+(mid-coord[0]), coord[1])
+
   def updateTrendingSpot(self):
     if self.goal is not None:
       if self.goal in self.__class__.trendingSpot:
@@ -262,6 +284,7 @@ class Agent(object):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
       for spot in spots:
         self.updateAmmoSpots(spot)
+        self.updateAmmoSpots(self.getSymmetricOpposite(spot))
 
   def updateAmmoSpots(self, spot):
     if spot[0:2] not in self.__class__.ammoSpots:
