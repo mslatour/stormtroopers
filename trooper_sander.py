@@ -330,9 +330,9 @@ class Agent(object):
   def getSafetyScore(self, coord):
     return (
       self.getPeaceValue(coord)
-      - self.getEuclidDist(coord, self.__class__.home_base)
-      - min(map(lambda x: getEuclidDist(coord, x), self.__class__.ammoSpots))
-      - self.getCrowdedValue(coord)
+#      - self.getEuclidDist(coord, self.__class__.home_base)
+#      - min(map(lambda x: getEuclidDist(coord, x), self.__class__.ammoSpots))
+#      - self.getCrowdedValue(coord)
     )
 
   def getEnemyCPs(self):
