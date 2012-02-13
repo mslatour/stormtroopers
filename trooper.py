@@ -53,7 +53,7 @@ MOTIVATION_SHOOT_TARGET = 'S'
 
 class Agent(object):
   
-  NAME = "TrooperSander"
+  NAME = "Trooper"
 
   # Location of the home base
   home_base = None
