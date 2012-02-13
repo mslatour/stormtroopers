@@ -1,0 +1,31 @@
+volgorde trending spots op basis van nuttigheid
+
+ammo locaties spiegelen -->symmetrie gebruiken
+ammo counter als je hem zelf oppikt.
+
+Rolverdelingen voor agents verzinnen?
+
+werken aan safety score als metric voor hoe graag je naar een control point wilt.
+of andere features
+
+wereldkennis toevoegen? --> features onafhankelijk van de eigenschappen van de kaart
+wanneer is iets veilig genoeg?
+volgorde van acties?
+
+
+Verdeling van groep:
+- features berekenen
+- strategiën uitwerken
+
+Betere padplanning maken --> sicco
+tactisch pad vinden (kort omlopen voor ammo pack)
+
+eventueel tussentijds herevalueren van doelen. terwijl je naar je doel gaat: is er nu een beter doel?
+
+dode agent algemene berekeningen laten doen. (de bijbehorende 0.1ms gebruiken)
+
+
+Verdeling van mensen:
+Sander: features / safety score
+Sicco: pathfinding
+Frank / Daniël: strategiën (offense/defense)
