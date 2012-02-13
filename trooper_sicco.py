@@ -15,7 +15,7 @@ class Agent(object):
         self.grid = field_grid
         self.settings = settings
         self.goal = None
-        
+ 
         # Recommended way to share variables between agents.
         if id == 0:
             self.all_agents = self.__class__.all_agents = []
@@ -30,7 +30,14 @@ class Agent(object):
         """
         self.observation = observation
         self.selected = observation.selected
-        
+ 
+    def isNewGoal(self, newGoal):
+        for agent in self.all_agents:
+            if agent.goal == newGoal:
+                return False
+
+	return True
+       
     def action(self):
         """ This function is called every step and should
             return a tuple in the form: (turn, speed, shoot)
@@ -42,7 +49,7 @@ class Agent(object):
             
         # Walk to ammo
         ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
-        if ammopacks:
+        if ammopacks and self.isNewGoal(ammopacks[0][0:2]):
             self.goal = ammopacks[0][0:2]
             
         # Drive to where the user clicked
@@ -51,7 +58,11 @@ class Agent(object):
         
         # Walk to random CP
         if self.goal is None:
-            self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+          randomCP = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+          if self.isNewGoal(randomCP):
+                self.goal = randomCP
+          else:
+             self.goal = randomCP
         
         # Shoot enemies
         shoot = False
@@ -76,7 +87,8 @@ class Agent(object):
             speed = 0
         
         return (turn,speed,shoot)
-        
+
+
     def debug(self, surface):
         """ Allows the agents to draw on the game UI,
             Refer to the pygame reference to see how you can
