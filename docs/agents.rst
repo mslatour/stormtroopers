@@ -10,24 +10,24 @@ But there is a quick rundown of the functions below as well.
 The first thing you need to do is create a new file with a class named `Agent` 
 that contains these 5 methods::
 
-	class Agent(object):
+    class Agent(object):
 
-	    NAME = "my_agent" # Replay filenames and console output will contain this name.
+        NAME = "my_agent" # Replay filenames and console output will contain this name.
     
-	    def __init__(self, id, team, settings=None, field_rects=None, field_grid=None, nav_mesh=None):
-	        pass
+        def __init__(self, id, team, settings=None, field_rects=None, field_grid=None, nav_mesh=None):
+            pass
         
-	    def observe(self, observation):
-	        pass
+        def observe(self, observation):
+            pass
         
-	    def action(self):
-	        return (0,0,False)
+        def action(self):
+            return (0,0,False)
         
-	    def debug(self, surface):
-	        pass
+        def debug(self, surface):
+            pass
         
-	    def finalize(self, interrupted=False):
-	        pass
+        def finalize(self, interrupted=False):
+            pass
 
 
 Initialize
@@ -38,7 +38,7 @@ This method will be called for each agent at the beginning of each game.
 
 .. py:module: domination.agent
 
-.. automethod:: agent.Agent.__init__
+.. automethod:: domination.agent.Agent.__init__
 
 The `settings` object is an instance of :class:`~core.Settings`, and contains all the game 
 settings such as game length and maximum score. The ``field_rects``, ``field_grid``, 
@@ -51,7 +51,7 @@ Navigation Mesh
 
 Also passed to the agent constructor is a 'navigation mesh'. This is a directed graph containing **the set of points from which all points on the map can be seen**, and the straight lines connecting them.
 
-.. image:: navmesh.png
+.. image:: ims/navmesh.png
 
 It is structured as a dictionary where the keys are ``(x, y)`` tuples defining connectivity and distances. All connections are in this dictionary *two times*, both A → B and B → A are in there. The example below shows a point at ``(0, 0)`` connected to two other points, at ``(1, 0)`` and ``(0 ,2)``::
 
@@ -73,10 +73,6 @@ Then you can set this parameter to different values when you start the game::
     MyScenario('my_agent.py','opponent.py',red_init={'aggressiveness':10.0}).run()
     MyScenario('my_agent.py','opponent.py',red_init={'aggressiveness':20.0}).run()
     
-It is suggested that you pass an open file to your agent this way, if you want the agent to read e.g. a Q-table::
-
-    red_init={'blob': open('my_q_table','r')}
-
 Observe
 -------
 
@@ -86,7 +82,7 @@ agents usually don't observe the entire game field, but only a part of it. Agent
 use this function to update what they know about the game, e.g. computing the most 
 likely locations of enemies. The properties of the `Observation` object are listed below.
 
-.. automethod:: agent.Agent.observe
+.. automethod:: domination.agent.Agent.observe
 
 .. literalinclude:: ../domination/core.py
    :pyobject: Observation
@@ -107,7 +103,7 @@ are supposed to look like ``(turn, speed, shoot)``.
 in the renderer). Note that any exceptions raised by your agent are ignored, and the agent
 simply loses it's turn. Turn and speed are capped by the game settings.
 
-.. automethod:: agent.Agent.action
+.. automethod:: domination.agent.Agent.action
 
 
 Debug
@@ -115,7 +111,7 @@ Debug
 
 Allows the agents to draw on the game UI, refer to the pygame reference to see how you can `draw <http://www.pygame.org/docs/ref/draw.html>`_ on a `pygame.surface <http://pygame.org/docs/ref/surface.html>`_. The given surface is not cleared automatically. Additionally, this function will only be called when the renderer is active, and it will only be called for the active team.
 
-.. automethod:: agent.Agent.debug
+.. automethod:: domination.agent.Agent.debug
 
 
 Finalize
@@ -123,7 +119,7 @@ Finalize
 
 This method gives your agent an opportunity to store data or clean up after the game is finished. Learning agents could store their Q-tables, which they load up in ``__init__``.
 
-.. automethod:: agent.Agent.finalize
+.. automethod:: domination.agent.Agent.finalize
 
 
 Communication
@@ -133,14 +129,33 @@ The recommended way to establish communication between agents is to define `stat
 
 In Python, static variables can be defined in the class body, and accessed through the class definition. Be careful, setting ``Agent.attribute`` is quite different from setting ``my_agent = Agent(); my_agent.attribute``::
 
-	class Agent:
-	    initial_knowledge = 1
+    class Agent:
+        shared_knowledge = 1
 
-	    def __init__(self, etc):
-	        print Agent.initial_knowledge
-	        # is identical to
-	        print self.__class__.initial_knowledge
+        def __init__(self, etc):
+            print Agent.shared_knowledge
+            # is identical to
+            print self.__class__.shared_knowledge
        
-	        # BUT THIS IS DIFFERENT:
-	        self.initial_knowledge = 5
+            # BUT THIS IS DIFFERENT:
+            self.shared_knowledge = 5
 
+(Binary) Data
+-------------
+
+You might want to supply your agent with additional (binary) data, for example a Q/value table, or some kind 
+of policy representation. The convention for doing this is to pass an open file-pointer to the agent's constructor::
+
+    Game(..., red_init={'blob': open('my_q_table','rb')} )
+
+This is also the way that your data will be passed to the agent in the web app. If you have stored your data as a
+pickled file, you can simply read it with::
+
+    # In class Agent
+    def __init__(..., blob=None ):
+        if blob is not None:
+            my_data = pickle.reads(blob.read())
+            blob.seek(0) #: Reset the filepointer for the next agent.
+            
+Of course, the way you store your data in this file is up to you, you can store it in any format, and even 
+read it line-by-line if you want.

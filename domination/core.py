@@ -23,14 +23,9 @@ import traceback
 import bisect
 import hashlib
 import logging
-from pprint import pprint
+import cPickle as pickle
 
-# Libraries
-try: 
-    import numpy
-except ImportError: 
-    logging.warning("You do not have numpy installed, but "\
-                    "this is fine if your agent isn't using it.")
+from pprint import pprint
 
 # Local
 from utilities import *
@@ -38,7 +33,10 @@ from libs import *
 
 # Shortcuts
 sqrt = math.sqrt
-inf  = float('inf')
+try:
+    inf = float('inf')
+except ValueError:
+    inf = 1e1000000
 pi   = math.pi
 sin  = math.sin
 cos  = math.cos
@@ -183,7 +181,7 @@ class Game(object):
                        record=False,
                        replay=None,
                        rendered=True, 
-                       verbose=False,
+                       verbose=True,
                        step_callback=None):
         """ Constructor for Game class 
             
@@ -349,7 +347,7 @@ class Game(object):
                         brain = self.blue_brain_class(i,TEAM_BLUE,settings=copy.copy(self.settings), field_rects=self.field.wallrects,
                                                  field_grid=self.field.wallgrid, nav_mesh=self.field.mesh, **self.blue_init)
                     else:
-                        brain = self.red_brain_class(i,TEAM_RED,settings=copy.copy(self.settings), **self.red_init)
+                        brain = self.blue_brain_class(i,TEAM_BLUE,settings=copy.copy(self.settings), **self.blue_init)
                     t = Tank(s.x+2, s.y+2, s.angle, i, team=TEAM_BLUE, brain=brain, spawn=s, record=self.record)
                     self.tanks.append(t)
                     self._add_object(t)
@@ -476,9 +474,11 @@ class Game(object):
         return self # For chaining, if you're into that.
     
     def _end(self, interrupted=False):
-        """ End the game, writes scores to a file and tells all the agents
-            that the game is over so that they can write any remaining info.
+        """ End the game  and tells all the agents that the game
+             is over so that they can write any remaining info.
         """
+        if self.renderer is not None:
+            self.renderer.quit()
         if interrupted:
             print "Game was interrupted."
             self.interrupted = True
@@ -1546,7 +1546,12 @@ class Observation(object):
         self.selected = False   #: Indicates if the agent is selected in the UI
         self.clicked = None     #: Indicates the position of a right-button click, if there was one
         self.keys = []          #: A list of all keys pressed in the previous turn
-
+        
+    def __str__(self):
+        items = sorted(self.__dict__.items())
+        maxlen = max(len(k) for k,v in items)
+        return "== Observation ==\n" + "\n".join(('%s : %r'%(k.ljust(maxlen), v)) for (k,v) in items)
+        
 
 class ReplayData(object):
     def __init__(self, game):
