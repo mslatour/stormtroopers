@@ -7,6 +7,9 @@ PEACE_THRESHOLD = 5
 
 # World knowledge
 NUM_AMMO_SPOTS = 6
+DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
+DEFAULT_FIELD_WIDTH = 41    # in case not provided in settings
+DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 
 # Behavior settings:
 SETTINGS_DEAD_CANT_THINK = True
@@ -23,6 +26,7 @@ SETTINGS_DEBUG_SHOW_MOTIVATION = True
 SETTINGS_DEBUG_SHOW_AMMO = True
 SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
+SETTINGS_DEBUG_SHOW_BASES = True
 
 #######################
 # Various motivations #
@@ -43,6 +47,7 @@ MOTIVATION_USER_CLICK = 'U'
 # Motivation: Shoot an enemy
 MOTIVATION_SHOOT_TARGET = 'S'
 
+
 ########
 # Ideas:
 # - Guard CP's without any friends
@@ -52,12 +57,11 @@ MOTIVATION_SHOOT_TARGET = 'S'
 
 class Agent(object):
   
-  NAME = "TrooperDaniel"
+  NAME = "Trooper"
   attack_strat1 = False
-
+  
   # Location of the home base
   home_base = None
-  enemy_base = None
 
   # Mapping between CPs
   # and number of agents who
@@ -79,9 +83,6 @@ class Agent(object):
 
   # List of CPs in enemy hands
   enemyCPs = []
-
-  # Amount of turns (time steps)
-  time = 0
 
   # Ammo locations
   ammoSpots = []
@@ -105,6 +106,21 @@ class Agent(object):
     # Recommended way to share variables between agents.
     if id == 0:
       self.all_agents = self.__class__.all_agents = []
+
+      tilesize = getattr(self.settings, 'tilesize', DEFAULT_FIELD_TILESIZE)
+      if field_rects is None:
+        self.__class__.field_width = DEFAULT_FIELD_WIDTH*tilesize
+        self.__class__.field_height = DEFAULT_FIELD_HEIGHT*tilesize
+      else:
+        self.__class__.field_width = len(field_grid[0])*tilesize
+        self.__class__.field_height = len(field_grid)*tilesize
+
+      if SETTINGS_DEBUG_ON:
+        self.debugMsg(
+          "Field: %d x %d"
+        % 
+          (self.__class__.field_width, self.__class__.field_height)
+        )
     self.all_agents.append(self)
     
     if(id == 1 | id == 2):
@@ -130,15 +146,17 @@ class Agent(object):
     # Set statistics for this turn
     # if current agent is the first
     if self.id == 0:
-      self.__class__.time += 1
       self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
       if self.__class__.home_base is None:
         self.debugMsg("Found home base at %s" % (obs.loc,))
         self.__class__.home_base = obs.loc
+        self.__class__.enemy_base = self.getSymmetricOpposite(obs.loc)
       self.debugMsg("Sleeping")
       return (0,0,0)
+
+    self.debugMsg("Foes: %s" % (obs.foes,))
 
     self.debugMsg("Foes: %s" % (obs.foes,))
     ###### CHECK IF AGENT (STILL) HAS A GOAL ###### 
@@ -167,7 +185,8 @@ class Agent(object):
       self.updateAllAmmoSpots(ammopacks)
      
     ###### START ACTING ###### 
-    
+    self.debugMsg('DEBUGGING WORKS BITCHES!')
+    print 'DEBUG MODE IS ON!!'
     #Make sure that agent always has some ammo
     if self.goal is not None:
       # Walk to ammo
@@ -227,19 +246,34 @@ class Agent(object):
     self.updateTrendingSpot()
 
     return (turn,speed,shoot)
-
+  
   def executeStrategy(self, strategy):
     if strategy == 'attack1':
       print 'executing attack strategy 1'
       self.debugMsg('executing attack strategy 1')
-      #if not within range of enemy spawn point:
-        #go to enemy spawn point
-      #if near enemy spawn point and no enemy
-        #search for ammo within range
+      own_loc = self.observation.loc
+      dist_to_enemy_base = self.getEuclidDist(self.__class__.enemy_base, own_loc)
+      if dist_to_enemy_base > self.settings.max_range:
+        self.goal = self.__class__.enemy_base
+        self.motivation = 'EB'
+    else: #if near enemy spawn point (and no enemy --> handled implicitly?)
+      #search for ammo within range        
+      nearest_ammo = self.getClosestLocation(self.ammoSpots)
+      if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
+        self.goal = nearest_ammo
+        self.motivation = 'NA'
+      else:
+        self.goal = own_loc
+        self.motivation = 'OL'
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
-      self.log.write("[%d-%f]: %s\n" % (self.__class__.time, time.time(), msg))
+      if hasattr(self, 'observation'):
+        self.log.write(
+          "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
+      else:
+        self.log.write(
+          "[?-%f]: %s\n" % (time.time(), msg))
       self.log.flush()
 
   def setTurnStats(self):
@@ -267,6 +301,15 @@ class Agent(object):
         inFriendlyHands[cp] = 1
     self.__class__.inFriendlyHands = inFriendlyHands
 
+  # Return the opposite coordinate given the
+  # symmetric property of the field
+  def getSymmetricOpposite(self, coord):
+    mid = round(self.__class__.field_width/2.0 + 0.5)
+    if coord[0] > mid:
+      return (mid-(coord[0]-mid), coord[1])
+    else:
+      return (mid+(mid-coord[0]), coord[1])
+
   def updateTrendingSpot(self):
     if self.goal is not None:
       if self.goal in self.__class__.trendingSpot:
@@ -290,6 +333,7 @@ class Agent(object):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
       for spot in spots:
         self.updateAmmoSpots(spot)
+        self.updateAmmoSpots(self.getSymmetricOpposite(spot))
 
   def updateAmmoSpots(self, spot):
     if spot[0:2] not in self.__class__.ammoSpots:
@@ -346,7 +390,7 @@ class Agent(object):
 
   def getPeaceValue(self, coord):
     if coord in self.__class__.inFriendlyHands:
-      return self.__class__.inFriendlyHands[coord]/float(self.__class__.time)
+      return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
     else:
       return 0
 
@@ -418,6 +462,8 @@ class Agent(object):
       if SETTINGS_DEBUG_ON:
         if SETTINGS_DEBUG_SHOW_PEACE_ZONES:
           self.drawPeaceZones(pygame, surface)
+        if SETTINGS_DEBUG_SHOW_BASES:
+          self.drawBases(pygame, surface)
         if SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS:
           self.drawKnownAmmoSpots(pygame, surface)
   
@@ -449,6 +495,13 @@ class Agent(object):
         (0,0,255)
       )
       surface.blit(txt, cp[0:2])
+
+  def drawBases(self, pygame, surface):
+    if self.__class__.home_base is not None:
+      font = pygame.font.Font(pygame.font.get_default_font(), 10)
+      txt = font.render("!", False, (255,255,255))
+      surface.blit(txt, self.__class__.home_base)
+      surface.blit(txt, self.__class__.enemy_base)
 
   def drawKnownAmmoSpots(self, pygame, surface):
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
