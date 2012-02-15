@@ -58,7 +58,6 @@ MOTIVATION_SHOOT_TARGET = 'S'
 class Agent(object):
   
   NAME = "Trooper"
-  attack_strat1 = False
   
   # Location of the home base
   home_base = None
@@ -100,6 +99,7 @@ class Agent(object):
     self.settings = settings
     self.motivation = None
     self.goal = None
+    self.attack_strat1 = False
     if SETTINGS_DEBUG_ON:
       self.log = open(("log%d.txt" % id),"w")
         
