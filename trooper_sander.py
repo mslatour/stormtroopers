@@ -2,6 +2,7 @@ import time
 
 # Parameters
 CROWDED_HOTSPOT = 3
+HOTSPOT_RANGE = 10
 SUFFICIENT_AMMO = 3
 PEACE_THRESHOLD = 5
 
@@ -184,8 +185,8 @@ class Agent(object):
     # Walk to an enemy CP
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
-      self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
       if self.goal is not None:
+        self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
     
@@ -222,6 +223,7 @@ class Agent(object):
       speed = 0
 
     self.updateTrendingSpot()
+    self.updateHotSpot()
 
     return (turn,speed,shoot)
 
@@ -288,6 +290,9 @@ class Agent(object):
       )
     )
 
+  def updateHotSpot(self):
+    self.__class__.hotspot[id] = self.observation.loc
+
   def updateAllAmmoSpots(self, spots):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
       for spot in spots:
@@ -333,21 +338,35 @@ class Agent(object):
     return abs(c1[0]-c2[0])+abs(c1[1]-c2[1])
   
   def getHotspotValue(self, coord):
-    if coord in self.__class__.hotspot:
-      return len(self.__class__.hotspot[coord])
-    else:
-      return 0
+    if coord is None:
+      return None
+
+    hs = self.__class__.hotspot
+    counter = 0
+    for agent in hs:
+      if self.getEuclidDist(hs[agent], coord) < HOTSPOT_RANGE:
+        counter += 1
+    return counter;
 
   def getTrendingSpotValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.trendingSpot:
       return len(self.__class__.trendingSpot[coord])
     else:
       return 0
 
   def getCrowdedValue(self, coord):
+    if coord is None:
+      return None
+
     return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
 
   def getPeaceValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.inFriendlyHands:
       return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
     else:
