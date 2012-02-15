@@ -59,8 +59,9 @@ class Agent(object):
   
   NAME = "Trooper"
   
-  # Location of the home base
+  # Location of the home/enemy base
   home_base = None
+  enemy_base = None
 
   # Mapping between CPs
   # and number of agents who
@@ -123,7 +124,7 @@ class Agent(object):
         )
     self.all_agents.append(self)
     
-    if(id == 1 | id == 2):
+    if(id == 1 or id == 2):
       self.attack_strat1 = True
     
   
@@ -193,10 +194,11 @@ class Agent(object):
       if obs.ammo < SUFFICIENT_AMMO:
         self.goal = self.getClosestLocation(ammopacks)
         self.motivation = MOTIVATION_AMMO
-        self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
+        if self.goal is not None:
+          self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
 
     #Attack strategy 1
-    if self.goal is None & self.attack_strat1:
+    if self.goal is None and self.attack_strat1:
       self.executeStrategy('attack1')
    
     # Shoot enemies
@@ -252,19 +254,20 @@ class Agent(object):
       print 'executing attack strategy 1'
       self.debugMsg('executing attack strategy 1')
       own_loc = self.observation.loc
-      dist_to_enemy_base = self.getEuclidDist(self.__class__.enemy_base, own_loc)
-      if dist_to_enemy_base > self.settings.max_range:
-        self.goal = self.__class__.enemy_base
-        self.motivation = 'EB'
-      else: #if near enemy spawn point (and no enemy --> handled implicitly?)
-        #search for ammo within range        
-        nearest_ammo = self.getClosestLocation(self.ammoSpots)
-        if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
-          self.goal = nearest_ammo
-          self.motivation = 'NA'
-        else:
-          self.goal = own_loc
-          self.motivation = 'OL'
+      if self.__class__.enemy_base is not None:
+        dist_to_enemy_base = self.getEuclidDist(self.__class__.enemy_base, own_loc)
+        if dist_to_enemy_base > self.settings.max_range:
+          self.goal = self.__class__.enemy_base
+          self.motivation = 'EB'
+        else: #if near enemy spawn point (and no enemy --> handled implicitly?)
+          #search for ammo within range        
+          nearest_ammo = self.getClosestLocation(self.ammoSpots)
+          if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
+            self.goal = nearest_ammo
+            self.motivation = 'NA'
+          else:
+            self.goal = own_loc
+            self.motivation = 'OL'
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
