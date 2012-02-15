@@ -256,15 +256,15 @@ class Agent(object):
       if dist_to_enemy_base > self.settings.max_range:
         self.goal = self.__class__.enemy_base
         self.motivation = 'EB'
-    else: #if near enemy spawn point (and no enemy --> handled implicitly?)
-      #search for ammo within range        
-      nearest_ammo = self.getClosestLocation(self.ammoSpots)
-      if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
-        self.goal = nearest_ammo
-        self.motivation = 'NA'
-      else:
-        self.goal = own_loc
-        self.motivation = 'OL'
+      else: #if near enemy spawn point (and no enemy --> handled implicitly?)
+        #search for ammo within range        
+        nearest_ammo = self.getClosestLocation(self.ammoSpots)
+        if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
+          self.goal = nearest_ammo
+          self.motivation = 'NA'
+        else:
+          self.goal = own_loc
+          self.motivation = 'OL'
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
