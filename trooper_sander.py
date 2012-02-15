@@ -132,6 +132,12 @@ class Agent(object):
     """
     self.observation = observation
     self.selected = observation.selected
+    
+    # Store base locations
+    if self.__class__.home_base is None and self.id == 0:
+      self.__class__.home_base = (observation.loc[0]+16, observation.loc[1]+8)
+      self.__class__.enemy_base = \
+        self.getSymmetricOpposite(self.__class__.home_base)
       
   def action(self):
     """ This function is called every step and should
@@ -145,10 +151,6 @@ class Agent(object):
       self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
-      if self.__class__.home_base is None:
-        self.debugMsg("Found home base at %s" % (obs.loc,))
-        self.__class__.home_base = obs.loc
-        self.__class__.enemy_base = self.getSymmetricOpposite(obs.loc)
       self.debugMsg("Sleeping")
       return (0,0,0)
 
@@ -477,7 +479,7 @@ class Agent(object):
   def drawBases(self, pygame, surface):
     if self.__class__.home_base is not None:
       font = pygame.font.Font(pygame.font.get_default_font(), 10)
-      txt = font.render("!", False, (255,255,255))
+      txt = font.render("@", False, (255,255,255))
       surface.blit(txt, self.__class__.home_base)
       surface.blit(txt, self.__class__.enemy_base)
 
