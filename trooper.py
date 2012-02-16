@@ -211,7 +211,8 @@ class Agent(object):
       self.goal = obs.foes[0][0:2]
       self.motivation = MOTIVATION_SHOOT_TARGET
       self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
-      shoot = True
+      if self.goal not in obs.friends:
+        shoot = True
 
     # If you can't think of anything to do
     # at least walk to a friendly control point

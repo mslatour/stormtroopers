@@ -249,7 +249,7 @@ class Agent(object):
         and not line_intersects_grid(obs.loc, obs.foes[0][0:2], self.grid, self.settings.tilesize)):
       self.goal = obs.foes[0][0:2]
       self.motivation = MOTIVATION_SHOOT_TARGET
-      if(self.getEuclidDist(self.__class__.enemy_base, self.goal)> ENEMY_BASE_RANGE): ###ESTIMATION FOR FOES BEING DEAD
+      if(self.getEuclidDist(self.__class__.enemy_base, self.goal)> ENEMY_BASE_RANGE) and self.goal not in obs.friends: ###ESTIMATION FOR FOES BEING DEAD
         self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
         shoot = True
       else:  
