@@ -1,23 +1,49 @@
 import time
+##############################
+##  *** Global Settings *** ##
+####### *************** ######
+##############################
 
-# Parameters
+##############
+# Parameters #
+##############
+# Number of agents that make a spot crowded.
 CROWDED_HOTSPOT = 3
-SUFFICIENT_AMMO = 3
+# Range in pixels that still counts as the same hotspot.
+HOTSPOT_RANGE = 20
+# The number of turns before a control point is considered peaceful.
 PEACE_THRESHOLD = 5
+# Number of ammo that counts as enough.
+SUFFICIENT_AMMO = 3
+#for attack strat
+# Range around enemy base
+ENEMY_BASE_RANGE = 30
+# Range for getting ammo near enemy base
+FIND_AMMO_RANGE = 100
 
-# World knowledge
+###################
+# World knowledge #
+###################
 NUM_AMMO_SPOTS = 6
 DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
 DEFAULT_FIELD_WIDTH = 41    # in case not provided in settings
 DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 
-# Behavior settings:
+#####################
+# Behavior settings #
+#####################
+# Agents who died don't think about their destinations
 SETTINGS_DEAD_CANT_THINK = True
 
-# Feature settings
+####################
+# Feature settings #
+####################
+# The peace value is cumulative.
 SETTINGS_PEACE_ADDS_UP = True
 
-# Debug settings
+##################
+# Debug settings #
+##################
 SETTINGS_DEBUG_ON = True
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
@@ -28,14 +54,9 @@ SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
 SETTINGS_DEBUG_SHOW_BASES = True
 
-#######################
-# Various motivations #
-# ------------------- ##############
-# Used to keep track of the        #
-# original reason to go somewhere  #
-# to check if it is still accurate #
-###################################
-
+########################
+# Motivation constants #
+########################
 # Motivation: Capture a enemy control point
 MOTIVATION_CAPTURE_CP = 'C'
 # Motivation: Guard a friendly control point
@@ -46,6 +67,10 @@ MOTIVATION_AMMO = 'A'
 MOTIVATION_USER_CLICK = 'U'
 # Motivation: Shoot an enemy
 MOTIVATION_SHOOT_TARGET = 'S'
+# Motivation: Go to enemy base
+MOTIVATION_ENEMY_BASE = 'EB'
+# Motivation: Stay at current location
+MOTIVATION_STAY_PUT = 'SP'
 
 
 ########
@@ -124,7 +149,7 @@ class Agent(object):
         )
     self.all_agents.append(self)
     
-    if(id == 1 or id == 2):
+    if(id == 3 or id == 4):
       self.attack_strat1 = True
     
   
@@ -137,13 +162,22 @@ class Agent(object):
     """
     self.observation = observation
     self.selected = observation.selected
+        
+    # Store base locations
+    if self.__class__.home_base is None and self.id == 0:
+      self.__class__.home_base = (observation.loc[0]+16, observation.loc[1]+8)
+      self.__class__.enemy_base = \
+        self.getSymmetricOppositeInt(self.__class__.home_base)
+    
+    self.updateHotSpot()
       
   def action(self):
     """ This function is called every step and should
         return a tuple in the form: (turn, speed, shoot)
     """
     obs = self.observation
-    
+    #if obs.selected:
+    #  print obs
     # Set statistics for this turn
     # if current agent is the first
     if self.id == 0:
@@ -186,19 +220,17 @@ class Agent(object):
       self.updateAllAmmoSpots(ammopacks)
      
     ###### START ACTING ###### 
-    self.debugMsg('DEBUGGING WORKS BITCHES!')
-    print 'DEBUG MODE IS ON!!'
     #Make sure that agent always has some ammo
-    if self.goal is not None:
+    #if self.goal is None or self.id == 3 or self.id == 4:  #TO GIVE AMMO TO ATTACKERS
       # Walk to ammo
-      if obs.ammo < SUFFICIENT_AMMO:
-        self.goal = self.getClosestLocation(ammopacks)
-        self.motivation = MOTIVATION_AMMO
-        if self.goal is not None:
-          self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
+    if obs.ammo <= SUFFICIENT_AMMO:
+      self.goal = self.getClosestLocation(ammopacks)
+      self.motivation = MOTIVATION_AMMO
+      if self.goal is not None:
+        self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
 
     #Attack strategy 1
-    if self.goal is None and self.attack_strat1:
+    if self.motivation is not MOTIVATION_AMMO and self.attack_strat1:
       self.executeStrategy('attack1')
    
     # Shoot enemies
@@ -209,22 +241,28 @@ class Agent(object):
         and not line_intersects_grid(obs.loc, obs.foes[0][0:2], self.grid, self.settings.tilesize)):
       self.goal = obs.foes[0][0:2]
       self.motivation = MOTIVATION_SHOOT_TARGET
-      self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
-      shoot = True
+      if(self.getEuclidDist(self.__class__.enemy_base, self.goal)> ENEMY_BASE_RANGE): ###ESTIMATION FOR FOES BEING DEAD
+        self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
+        shoot = True
+      else:  
+        self.debugMsg("*> Not Shooting (%d,%d). Enemy probably dead" % (self.goal[0],self.goal[1]))
+        print "not shooting enemy inside base"
+        print "standing still"
+        self.goal = obs.loc
 
     #Backup strategies:#
 
     # Walk to an enemy CP
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
-      self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
       if self.goal is not None:
+        self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
 
     # If you can't think of anything to do
     # at least walk to a friendly control point
-    if self.goal is None:
+    if self.goal is None and self.id != 3 and self.id!= 4:
       self.goal = self.getClosestLocation(self.getQuietRestlessFriendlyCPs())
       if self.goal is not None:
         self.motivation = MOTIVATION_GUARD_CP
@@ -238,6 +276,7 @@ class Agent(object):
       dx = path[0][0]-obs.loc[0]
       dy = path[0][1]-obs.loc[1]
       turn = angle_fix(math.atan2(dy, dx)-obs.angle)
+      
       if turn > self.settings.max_turn or turn < -self.settings.max_turn:
           shoot = False
       speed = (dx**2 + dy**2)**0.5
@@ -246,28 +285,50 @@ class Agent(object):
       speed = 0
 
     self.updateTrendingSpot()
-
+    self.updateHotSpot()
     return (turn,speed,shoot)
   
   def executeStrategy(self, strategy):
+    obs = self.observation
     if strategy == 'attack1':
-      print 'executing attack strategy 1'
-      self.debugMsg('executing attack strategy 1')
+      ##Only perform strategy with enough ammo
+      if obs.ammo < SUFFICIENT_AMMO:
+        self.debugMsg("insufficient ammo for attack strat")
+        if obs.objects is not None: ##bij voorkeur alleen naar ammo spots met ammo gaan
+          self.debugMsg("getting ammo")
+          self.goal = self.getClosestLocation(obs.objects)
+          self.motivation = MOTIVATION_AMMO
+          return
+        elif self.ammoSpots is not None:
+          self.goal = self.getClosestLocation(self.ammoSpots)
+          self.motivation = MOTIVATION_AMMO
+        else:
+          self.debugMsg("cancel execution of strategy")
+          self.goal = self.getClosestLocation(self.getQuietEnemyCPs()) # MIGHT BE NONE!!!!
+          self.motivation = MOTIVATION_CAPTURE_CP
+          return
+
+      self.debugMsg("executing attack strategy 1")
+      
       own_loc = self.observation.loc
       if self.__class__.enemy_base is not None:
         dist_to_enemy_base = self.getEuclidDist(self.__class__.enemy_base, own_loc)
-        if dist_to_enemy_base > self.settings.max_range:
+        if dist_to_enemy_base > ENEMY_BASE_RANGE + 15: #stand a little outside enemy base
           self.goal = self.__class__.enemy_base
-          self.motivation = 'EB'
+          self.motivation = MOTIVATION_ENEMY_BASE
+        #Agent might be in the enemy base anyway  
+        #elif dist_to_enemy_base < ENEMY_BASE_RANGE: #if within enemy base, move outside it
+        #self.goal = somewhere outside enemy base
+          
         else: #if near enemy spawn point (and no enemy --> handled implicitly?)
           #search for ammo within range        
           nearest_ammo = self.getClosestLocation(self.ammoSpots)
-          if(self.getEuclidDist(nearest_ammo, own_loc) <= self.settings.max_range):
+          if(self.getEuclidDist(nearest_ammo, own_loc) <= FIND_AMMO_RANGE):
             self.goal = nearest_ammo
-            self.motivation = 'NA'
+            self.motivation = MOTIVATION_AMMO
           else:
             self.goal = own_loc
-            self.motivation = 'OL'
+            self.motivation = MOTIVATION_STAY_PUT
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
@@ -278,7 +339,7 @@ class Agent(object):
         self.log.write(
           "[?-%f]: %s\n" % (time.time(), msg))
       self.log.flush()
-
+      
   def setTurnStats(self):
     obs = self.observation
     # Reset trendingSpot
@@ -313,6 +374,15 @@ class Agent(object):
     else:
       return (mid+(mid-coord[0]), coord[1])
 
+  # Return the opposite coordinate given the
+  # symmetric property of the field
+  def getSymmetricOppositeInt(self, coord):
+    mid = round(self.__class__.field_width/2.0 + 0.5)
+    if coord[0] > mid:
+      return (int(mid-(coord[0]-mid)), int(coord[1]))
+    else:
+      return (int(mid+(mid-coord[0])), int(coord[1]))
+
   def updateTrendingSpot(self):
     if self.goal is not None:
       if self.goal in self.__class__.trendingSpot:
@@ -331,6 +401,11 @@ class Agent(object):
         )
       )
     )
+
+  def updateHotSpot(self):
+    self.__class__.hotspot[self.id] = self.observation.loc
+    if self.id == 5:
+      self.debugMsg("Hotspots: %s" % (self.__class__.hotspot,))
 
   def updateAllAmmoSpots(self, spots):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
@@ -377,21 +452,35 @@ class Agent(object):
     return abs(c1[0]-c2[0])+abs(c1[1]-c2[1])
   
   def getHotspotValue(self, coord):
-    if coord in self.__class__.hotspot:
-      return len(self.__class__.hotspot[coord])
-    else:
-      return 0
+    if coord is None:
+      return None
+
+    hs = self.__class__.hotspot
+    counter = 0
+    for agent in hs:
+      if self.getEuclidDist(hs[agent], coord) < HOTSPOT_RANGE:
+        counter += 1
+    return counter;
 
   def getTrendingSpotValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.trendingSpot:
       return len(self.__class__.trendingSpot[coord])
     else:
       return 0
 
   def getCrowdedValue(self, coord):
+    if coord is None:
+      return None
+
     return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
 
   def getPeaceValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.inFriendlyHands:
       return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
     else:
@@ -498,13 +587,21 @@ class Agent(object):
         (0,0,255)
       )
       surface.blit(txt, cp[0:2])
+      txt2 = font.render(
+        "%d" % (self.getHotspotValue(cp[0:2]),),
+        True,
+        (255,0,0)
+      )
+      surface.blit(txt2, (cp[0], cp[1]+10))
+      pygame.draw.circle(surface, (255,0,0), cp[0:2], HOTSPOT_RANGE,2)
 
   def drawBases(self, pygame, surface):
     if self.__class__.home_base is not None:
       font = pygame.font.Font(pygame.font.get_default_font(), 10)
-      txt = font.render("!", False, (255,255,255))
+      txt = font.render("@", False, (255,255,255))
       surface.blit(txt, self.__class__.home_base)
       surface.blit(txt, self.__class__.enemy_base)
+      pygame.draw.circle(surface, (255,255,0),self.__class__.enemy_base[0:2] , ENEMY_BASE_RANGE,2)
 
   def drawKnownAmmoSpots(self, pygame, surface):
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
