@@ -151,6 +151,8 @@ class Agent(object):
     
     if(id == 3 or id == 4):
       self.attack_strat1 = True
+      self.debugMsg("I solemnly swear to follow attack strategy 1")
+      print "I solemnly swear to follow attack strategy 1"
     
   
   def observe(self, observation):
@@ -176,8 +178,8 @@ class Agent(object):
         return a tuple in the form: (turn, speed, shoot)
     """
     obs = self.observation
-    #if obs.selected:
-    #  print obs
+    if obs.selected:
+      print obs
     # Set statistics for this turn
     # if current agent is the first
     if self.id == 0:
@@ -220,19 +222,25 @@ class Agent(object):
       self.updateAllAmmoSpots(ammopacks)
      
     ###### START ACTING ###### 
+    self.debugMsg("1")
     #Make sure that agent always has some ammo
-    #if self.goal is None or self.id == 3 or self.id == 4:  #TO GIVE AMMO TO ATTACKERS
+    if self.goal is not None:  #TO GIVE AMMO TO ATTACKERS
       # Walk to ammo
-    if obs.ammo <= SUFFICIENT_AMMO:
-      self.goal = self.getClosestLocation(ammopacks)
-      self.motivation = MOTIVATION_AMMO
-      if self.goal is not None:
-        self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
-
+      if obs.ammo < SUFFICIENT_AMMO:
+        self.goal = self.getClosestLocation(ammopacks)
+        if self.goal is not None:
+          self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
+          self.motivation = MOTIVATION_AMMO
+        elif self.ammoSpots is not None and self.attack_strat1:
+          self.goal = self.getClosestLocation(self.ammoSpots)
+          self.debugMsg("going to known ammo spot")
+          self.motivation = MOTIVATION_AMMO
+   
+    self.debugMsg("2")
     #Attack strategy 1
     if self.motivation is not MOTIVATION_AMMO and self.attack_strat1:
       self.executeStrategy('attack1')
-   
+    self.debugMsg("3")
     # Shoot enemies
     shoot = False
     if (obs.ammo > 0 and 
@@ -247,27 +255,30 @@ class Agent(object):
       else:  
         self.debugMsg("*> Not Shooting (%d,%d). Enemy probably dead" % (self.goal[0],self.goal[1]))
         print "not shooting enemy inside base"
-        print "standing still"
-        self.goal = obs.loc
-
+        print "recomputing plan"
+        self.goal = None
+        if self.attack_strat1:
+          self.executeStrategy('attack1')
+    
+    self.debugMsg("4")
     #Backup strategies:#
-
-    # Walk to an enemy CP
+      # Walk to an enemy CP
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
       if self.goal is not None:
         self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
-
+    
+    self.debugMsg("5")
     # If you can't think of anything to do
     # at least walk to a friendly control point
-    if self.goal is None and self.id != 3 and self.id!= 4:
+    if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietRestlessFriendlyCPs())
       if self.goal is not None:
         self.motivation = MOTIVATION_GUARD_CP
         self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
-    
+    self.debugMsg("6")
     ######## COMPUTE ACTUAL ACTION OUTPUT ########
     
     # Compute path, angle and drive
@@ -289,24 +300,30 @@ class Agent(object):
     return (turn,speed,shoot)
   
   def executeStrategy(self, strategy):
+    self.debugMsg("performing action according to attack strategy 1")
     obs = self.observation
-    if strategy == 'attack1':
+    if strategy == "attack1":
       ##Only perform strategy with enough ammo
-      if obs.ammo < SUFFICIENT_AMMO:
-        self.debugMsg("insufficient ammo for attack strat")
-        if obs.objects is not None: ##bij voorkeur alleen naar ammo spots met ammo gaan
-          self.debugMsg("getting ammo")
-          self.goal = self.getClosestLocation(obs.objects)
-          self.motivation = MOTIVATION_AMMO
-          return
-        elif self.ammoSpots is not None:
-          self.goal = self.getClosestLocation(self.ammoSpots)
-          self.motivation = MOTIVATION_AMMO
-        else:
-          self.debugMsg("cancel execution of strategy")
-          self.goal = self.getClosestLocation(self.getQuietEnemyCPs()) # MIGHT BE NONE!!!!
-          self.motivation = MOTIVATION_CAPTURE_CP
-          return
+      #if obs.ammo < SUFFICIENT_AMMO:
+      # self.debugMsg("insufficient ammo for attack strat")
+      #  ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
+      #  if ammopacks is not None: ##bij voorkeur alleen naar ammo spots met ammo gaan
+      #    self.debugMsg("getting nearby ammo")
+      #    self.goal = self.getClosestLocation(ammopacks)
+      #    self.motivation = MOTIVATION_AMMO
+      #    return
+      #  elif self.ammoSpots is not None:
+      #    self.goal = self.getClosestLocation(self.ammoSpots)
+      #    self.debugMsg("going to known ammo spot")
+      #    self.motivation = MOTIVATION_AMMO
+      #  else:
+      #    self.debugMsg("cancel execution of strategy. Going to an uncontrolled CP")
+      #    self.goal = self.getClosestLocation(self.getQuietEnemyCPs()) # MIGHT BE NONE!!!!
+      #    self.motivation = MOTIVATION_CAPTURE_CP
+      #    if self.goal is None: 
+      #      self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+      #      self.debugMsg("going to a random CP")
+      #    return
 
       self.debugMsg("executing attack strategy 1")
       
@@ -322,6 +339,8 @@ class Agent(object):
           
         else: #if near enemy spawn point (and no enemy --> handled implicitly?)
           #search for ammo within range        
+          print "within range of enemy base"
+          self.debugMsg("within range of enemy base")
           nearest_ammo = self.getClosestLocation(self.ammoSpots)
           if(self.getEuclidDist(nearest_ammo, own_loc) <= FIND_AMMO_RANGE):
             self.goal = nearest_ammo
