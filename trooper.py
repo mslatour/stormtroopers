@@ -1,24 +1,45 @@
 import time
 
-# Parameters
-CROWDED_HOTSPOT = 3
-HOTSPOT_RANGE = 10
-SUFFICIENT_AMMO = 3
-PEACE_THRESHOLD = 5
+##############################
+##  *** Global Settings *** ##
+####### *************** ######
+##############################
 
-# World knowledge
+##############
+# Parameters #
+##############
+# Number of agents that make a spot crowded.
+CROWDED_HOTSPOT = 3
+# Range in pixels that still counts as the same hotspot.
+HOTSPOT_RANGE = 20
+# The number of turns before a control point is considered peaceful.
+PEACE_THRESHOLD = 5
+# Number of ammo that counts as enough.
+SUFFICIENT_AMMO = 3
+
+###################
+# World knowledge #
+###################
 NUM_AMMO_SPOTS = 6
 DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
 DEFAULT_FIELD_WIDTH = 41    # in case not provided in settings
 DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 
-# Behavior settings:
+#####################
+# Behavior settings #
+#####################
+# Agents who died don't think about their destinations
 SETTINGS_DEAD_CANT_THINK = True
 
-# Feature settings
+####################
+# Feature settings #
+####################
+# The peace value is cumulative.
 SETTINGS_PEACE_ADDS_UP = True
 
-# Debug settings
+##################
+# Debug settings #
+##################
 SETTINGS_DEBUG_ON = True
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
@@ -29,14 +50,9 @@ SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
 SETTINGS_DEBUG_SHOW_BASES = True
 
-#######################
-# Various motivations #
-# ------------------- ##############
-# Used to keep track of the        #
-# original reason to go somewhere  #
-# to check if it is still accurate #
-###################################
-
+########################
+# Motivation constants #
+########################
 # Motivation: Capture a enemy control point
 MOTIVATION_CAPTURE_CP = 'C'
 # Motivation: Guard a friendly control point
@@ -47,14 +63,6 @@ MOTIVATION_AMMO = 'A'
 MOTIVATION_USER_CLICK = 'U'
 # Motivation: Shoot an enemy
 MOTIVATION_SHOOT_TARGET = 'S'
-
-
-########
-# Ideas:
-# - Guard CP's without any friends
-# - Abandon peacefull CPs to give backup to
-#   the more restless CPs
-# - Improve the path planning
 
 class Agent(object):
   
@@ -138,6 +146,8 @@ class Agent(object):
       self.__class__.home_base = (observation.loc[0]+16, observation.loc[1]+8)
       self.__class__.enemy_base = \
         self.getSymmetricOpposite(self.__class__.home_base)
+    
+    self.updateHotSpot()
       
   def action(self):
     """ This function is called every step and should
@@ -225,7 +235,6 @@ class Agent(object):
       speed = 0
 
     self.updateTrendingSpot()
-    self.updateHotSpot()
 
     return (turn,speed,shoot)
 
@@ -293,7 +302,9 @@ class Agent(object):
     )
 
   def updateHotSpot(self):
-    self.__class__.hotspot[id] = self.observation.loc
+    self.__class__.hotspot[self.id] = self.observation.loc
+    if self.id == 5:
+      self.debugMsg("Hotspots: %s" % (self.__class__.hotspot,))
 
   def updateAllAmmoSpots(self, spots):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
@@ -475,6 +486,13 @@ class Agent(object):
         (0,0,255)
       )
       surface.blit(txt, cp[0:2])
+      txt2 = font.render(
+        "%d" % (self.getHotspotValue(cp[0:2]),),
+        True,
+        (255,0,0)
+      )
+      surface.blit(txt2, (cp[0], cp[1]+10))
+      pygame.draw.circle(surface, (255,0,0), cp[0:2], HOTSPOT_RANGE,2)
 
   def drawBases(self, pygame, surface):
     if self.__class__.home_base is not None:
