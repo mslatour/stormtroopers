@@ -13,7 +13,7 @@ CROWDED_HOTSPOT = 3
 # Range in pixels that still counts as the same hotspot.
 HOTSPOT_RANGE = 20
 # The number of turns before a control point is considered peaceful.
-PEACE_THRESHOLD = 5
+DOMINATION_THRESHOLD = 5
 # Number of ammo that counts as enough.
 SUFFICIENT_AMMO = 3
 
@@ -34,19 +34,19 @@ SETTINGS_DEAD_CANT_THINK = True
 ####################
 # Feature settings #
 ####################
-# The peace value is cumulative.
-SETTINGS_PEACE_ADDS_UP = True
+# The domination value is cumulative.
+SETTINGS_DOMINATION_ADDS_UP = True
 
 ##################
 # Debug settings #
 ##################
-SETTINGS_DEBUG_ON = True
+SETTINGS_DEBUG_ON = False
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
 SETTINGS_DEBUG_SHOW_ID = True
 SETTINGS_DEBUG_SHOW_MOTIVATION = True
 SETTINGS_DEBUG_SHOW_AMMO = True
-SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
+SETTINGS_DEBUG_SHOW_DOMINATION = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
 SETTINGS_DEBUG_SHOW_BASES = True
 
@@ -68,17 +68,16 @@ class Agent(object):
   
   NAME = "Trooper"
 
-  # Location of the home base
+  #########################
+  # Extended observations #
+  #########################
+
+  # Location of the bases
   home_base = None
+  enemy_base = None
 
-  # Mapping between CPs
-  # and number of agents who
-  # are there
-  hotspot = {}
-
-  # Mapping between CPs
-  # and number of agents who 
-  # are going there
+  # Mapping between locations
+  # and agents who are going there.
   trendingSpot = {}
 
   # Mapping between friendly CPs
@@ -94,6 +93,10 @@ class Agent(object):
 
   # Ammo locations
   ammoSpots = []
+
+  ##################
+  # Initialization #
+  ##################
     
   def __init__(self, id, team, settings=None, field_rects=None, field_grid=None, nav_mesh=None):
     """ Each agent is initialized at the beginning of each game.
@@ -131,23 +134,205 @@ class Agent(object):
         )
     self.all_agents.append(self)
   
-  def observe(self, observation):
+  ############################
+  # *  Observation methods * #
+  ############################
+
+  def observe(self, obs):
     """ Each agent is passed an observation using this function,
         before being asked for an action. You can store either
         the observation object or its properties to use them
         to determine your action. Note that the observation object
         is modified in place.
     """
-    self.observation = observation
-    self.selected = observation.selected
+    self.observation = obs
+    self.selected = obs.selected
+ 
+    #############################
+    # Update of turn statistics #
+    #############################
+    if self.id == 0:
+      # Store base locations
+      if self.__class__.home_base is None:
+        self.__class__.home_base = (obs.loc[0]+16, obs.loc[1]+8)
+        self.__class__.enemy_base = \
+          self.getSymmetricOpposite(self.__class__.home_base)
     
-    # Store base locations
-    if self.__class__.home_base is None and self.id == 0:
-      self.__class__.home_base = (observation.loc[0]+16, observation.loc[1]+8)
-      self.__class__.enemy_base = \
-        self.getSymmetricOpposite(self.__class__.home_base)
-    
-    self.updateHotSpot()
+      # Reset trendingSpot
+      self.__class__.trendingSpot = {}
+      
+      # Update friendly CPs
+      self.__class__.friendlyCPs = map(lambda x: x[0:2], 
+        filter(lambda x: x[2] == self.team, obs.cps))
+      
+      # Update enemy CPs
+      self.__class__.enemyCPs = map(lambda x:x[0:2], 
+        filter(lambda x: x[2] != self.team, obs.cps))
+
+      # Update inFriendlyHands stat
+      if SETTINGS_DOMINATION_ADDS_UP:
+        inFriendlyHands = self.__class__.inFriendlyHands
+      else:
+        inFriendlyHands = {}
+      for cp in self.__class__.friendlyCPs:
+        if cp in self.__class__.inFriendlyHands:
+          inFriendlyHands[cp] = self.__class__.inFriendlyHands[cp] + 1
+        else:
+          inFriendlyHands[cp] = 1
+      self.__class__.inFriendlyHands = inFriendlyHands
+  
+  
+  # Returns the opposite coordinate given the
+  # symmetric property of the field
+  def getSymmetricOpposite(self, coord):
+    mid = round(self.__class__.field_width/2.0 + 0.5)
+    if coord[0] > mid:
+      return (mid-(coord[0]-mid), coord[1])
+    else:
+      return (mid+(mid-coord[0]), coord[1])
+
+  # Registers goal in trending spot dictionary
+  def updateTrendingSpot(self):
+    if self.goal is not None:
+      if self.goal in self.__class__.trendingSpot:
+        self.__class__.trendingSpot[self.goal].append(self.id)
+      else:
+        self.__class__.trendingSpot[self.goal] = [self.id]
+
+  # Registers (unknown) ammo spots
+  def updateAllAmmoSpots(self, spots):
+    if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
+      for spot in spots:
+        self._updateAmmoSpots(spot)
+        self._updateAmmoSpots(self.getSymmetricOpposite(spot))
+
+  # Auxilary method of updateAllAmmoSpots
+  def _updateAmmoSpots(self, spot):
+    if spot[0:2] not in self.__class__.ammoSpots:
+      self.__class__.ammoSpots.append(spot[0:2])
+  
+  #########################
+  # * Feature retrieval * #
+  #########################
+
+  # Returns the distance between
+  # two coordinates using sqrt(dx^2+dy^2)
+  def getEuclidDist(self, c1, c2):
+    if c1 is None or c2 is None:
+      return None
+    return ((c1[0]-c2[0])**2+(c1[1]-c2[1])**2)**0.5
+  
+  # Returns the number of friends (not self)
+  # that are near to the coordinate
+  def getHotspotValue(self, coord):
+    if coord is None:
+      return None
+    counter = 0
+    for friend in self.observation.friends:
+      if self.getEuclidDist(friend[0:2], coord) < HOTSPOT_RANGE:
+        counter += 1
+    return counter;
+
+  # Returns the number of agents
+  # that are going to the coordinate
+  def getTrendingSpotValue(self, coord):
+    if coord is None:
+      return None
+    if coord in self.__class__.trendingSpot:
+      return len(self.__class__.trendingSpot[coord])
+    else:
+      return 0
+
+  # Returns a metric representing the
+  # amount of crowdness in the coordinate.
+  # Uses both trendingSpot and hotspot values.
+  def getCrowdedValue(self, coord):
+    if coord is None:
+      return None
+    return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
+
+  # [Deprecated]
+  # Use getDominationValue instead!
+  def getPeaceValue(self, cp):
+    self.getDominationValue(cp)
+
+  # Returns the percentage of turns that the
+  # control point has been in friendly hands
+  def getDominationValue(self, cp):
+    if cp is None:
+      return None
+    if cp in self.__class__.inFriendlyHands:
+      return self.__class__.inFriendlyHands[cp]/float(self.observation.step)
+    else:
+      return 0
+
+  # BETA!
+  # Safety score based on:
+  # - distance to home base
+  # - domination value
+  # - hotspot value
+  # - distance to a known ammo spot
+  def getSafetyScore(self, coord):
+    return (
+      self.getDominationValue(coord)
+      + self.getCrowdedValue(coord)
+      - self.getEuclidDist(coord, self.__class__.home_base)
+      - min(map(lambda x: getEuclidDist(coord, x), self.__class__.ammoSpots))
+    )
+
+  # Returns the control points
+  # that are in enemy hands
+  def getEnemyCPs(self):
+    return filter(lambda x: x[2] != self.team, self.observation.cps)
+
+  # Returns the control points
+  # that are in enemy hands
+  # and have a low crowdedValue
+  def getQuietEnemyCPs(self):
+    return filter((lambda x: x[2] != self.team and
+      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
+
+  # Returns the control points
+  # that are in friendly hands
+  def getFriendlyCPs(self):
+    return filter(lambda x: x[2] == self.team, self.observation.cps)
+
+  # Returns the control points
+  # that are in enemy hands
+  # and have a low crowdedValue
+  def getQuietFriendlyCPs(self):
+    return filter(( lambda x: x[2] == self.team and 
+      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
+  
+  # Returns the control points
+  # that are in enemy hands
+  # and have a low crowdedValue
+  # and domination value
+  def getQuietRestlessFriendlyCPs(self):
+    return filter(( lambda x: x[2] == self.team and 
+      self.getDominationValue(x[0:2]) < DOMINATION_THRESHOLD and
+      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
+
+  def getClosestLocation(self, locations):
+    """ Returns the closest location from the set
+        in terms of euclid distance to the current location
+    """
+    obs = self.observation
+    if len(locations) > 0:
+      min_i = 0
+      min_dist = self.getEuclidDist(obs.loc, locations[0][0:2])
+      for i in range(1, len(locations)):
+        dist = self.getEuclidDist(obs.loc, locations[1][0:2])
+        if dist < min_dist:
+          min_i = i
+          min_dist = dist
+      return locations[min_i][0:2]
+    else:
+      return None
+
+  #####################################
+  # *  Action and strategy methods  * #
+  #####################################
       
   def action(self):
     """ This function is called every step and should
@@ -155,10 +340,6 @@ class Agent(object):
     """
     obs = self.observation
     
-    # Set statistics for this turn
-    # if current agent is the first
-    if self.id == 0:
-      self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
       self.debugMsg("Sleeping")
@@ -176,7 +357,7 @@ class Agent(object):
       self.validateMotivation()
 
     if self.goal is not None:
-      self.log.write("*> Go to: (%d,%d)" % (self.goal[0], self.goal[1]))
+      self.debugMsg("*> Go to: (%d,%d)" % (self.goal[0], self.goal[1]))
     
     # Drive to where the user clicked
     if self.selected and self.observation.clicked:
@@ -238,84 +419,9 @@ class Agent(object):
 
     return (turn,speed,shoot)
 
-  def debugMsg(self, msg):
-    if SETTINGS_DEBUG_ON:
-      if hasattr(self, 'observation'):
-        self.log.write(
-          "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
-      else:
-        self.log.write(
-          "[?-%f]: %s\n" % (time.time(), msg))
-      self.log.flush()
-
-  def setTurnStats(self):
-    obs = self.observation
-    # Reset trendingSpot
-    self.__class__.trendingSpot = {}
-    
-    # Update friendly CPs
-    self.__class__.friendlyCPs = map(lambda x: x[0:2], 
-      filter(lambda x: x[2] == self.team, obs.cps))
-    
-    # Update enemy CPs
-    self.__class__.enemyCPs = map(lambda x:x[0:2], 
-      filter(lambda x: x[2] != self.team, obs.cps))
-
-    # Update inFriendlyHands stat
-    if SETTINGS_PEACE_ADDS_UP:
-      inFriendlyHands = self.__class__.inFriendlyHands
-    else:
-      inFriendlyHands = {}
-    for cp in self.__class__.friendlyCPs:
-      if cp in self.__class__.inFriendlyHands:
-        inFriendlyHands[cp] = self.__class__.inFriendlyHands[cp] + 1
-      else:
-        inFriendlyHands[cp] = 1
-    self.__class__.inFriendlyHands = inFriendlyHands
-
-  # Return the opposite coordinate given the
-  # symmetric property of the field
-  def getSymmetricOpposite(self, coord):
-    mid = round(self.__class__.field_width/2.0 + 0.5)
-    if coord[0] > mid:
-      return (mid-(coord[0]-mid), coord[1])
-    else:
-      return (mid+(mid-coord[0]), coord[1])
-
-  def updateTrendingSpot(self):
-    if self.goal is not None:
-      if self.goal in self.__class__.trendingSpot:
-        self.__class__.trendingSpot[self.goal].append(self.id)
-      else:
-        self.__class__.trendingSpot[self.goal] = [self.id]
-
-    self.debugMsg("[HS: %s]" % (self.__class__.trendingSpot,))
-    self.debugMsg(
-      (
-        "[MAXHS: %d]" % max(
-          map(
-            lambda x: len(self.__class__.trendingSpot[x]),
-            self.__class__.trendingSpot
-          )
-        )
-      )
-    )
-
-  def updateHotSpot(self):
-    self.__class__.hotspot[self.id] = self.observation.loc
-    if self.id == 5:
-      self.debugMsg("Hotspots: %s" % (self.__class__.hotspot,))
-
-  def updateAllAmmoSpots(self, spots):
-    if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
-      for spot in spots:
-        self.updateAmmoSpots(spot)
-        self.updateAmmoSpots(self.getSymmetricOpposite(spot))
-
-  def updateAmmoSpots(self, spot):
-    if spot[0:2] not in self.__class__.ammoSpots:
-      self.__class__.ammoSpots.append(spot[0:2])
-
+  # Checks if the current motivation to
+  # go to the goal is still valid.
+  # If not, it clears the goal and motivation
   def validateMotivation(self):
     obs = self.observation
     self.debugMsg("[MOT: %s]" % (self.motivation,))
@@ -340,103 +446,21 @@ class Agent(object):
         self.goal = None
         self.motivation = None
     
+  #####################
+  # * Debug methods * #
+  #####################
 
-  ############################
-  # Methods used to retrieve #
-  #  information out of the  #
-  #   current observations   #
-  ############################
-
-  def getEuclidDist(self, c1, c2):
-    return abs(c1[0]-c2[0])+abs(c1[1]-c2[1])
-  
-  def getHotspotValue(self, coord):
-    if coord is None:
-      return None
-
-    hs = self.__class__.hotspot
-    counter = 0
-    for agent in hs:
-      if self.getEuclidDist(hs[agent], coord) < HOTSPOT_RANGE:
-        counter += 1
-    return counter;
-
-  def getTrendingSpotValue(self, coord):
-    if coord is None:
-      return None
-
-    if coord in self.__class__.trendingSpot:
-      return len(self.__class__.trendingSpot[coord])
-    else:
-      return 0
-
-  def getCrowdedValue(self, coord):
-    if coord is None:
-      return None
-
-    return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
-
-  def getPeaceValue(self, coord):
-    if coord is None:
-      return None
-
-    if coord in self.__class__.inFriendlyHands:
-      return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
-    else:
-      return 0
-
-  # Safety score based on:
-  # - distance to home base
-  # - peace value
-  # - hotspot value
-  # - distance to a known ammo spot
-  def getSafetyScore(self, coord):
-    return (
-      self.getPeaceValue(coord)
-#      - self.getEuclidDist(coord, self.__class__.home_base)
-#      - min(map(lambda x: getEuclidDist(coord, x), self.__class__.ammoSpots))
-#      - self.getCrowdedValue(coord)
-    )
-
-  def getEnemyCPs(self):
-    return filter(lambda x: x[2] != self.team, self.observation.cps)
-
-  def getQuietEnemyCPs(self):
-    return filter((lambda x: x[2] != self.team and
-      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
-
-  def getFriendlyCPs(self):
-    return filter(lambda x: x[2] == self.team, self.observation.cps)
-
-  def getQuietFriendlyCPs(self):
-    return filter(( lambda x: x[2] == self.team and 
-      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
-  
-  def getQuietRestlessFriendlyCPs(self):
-    return filter(( lambda x: x[2] == self.team and 
-      self.getPeaceValue(x[0:2]) < PEACE_THRESHOLD and
-      self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
-
-  def getClosestLocation(self, locations):
-    """ Returns the closest enemy control point
-        in terms of euclid distance from the 
-        current agent coordinates that is not
-        already visited by more than one other
-        agent.
-    """
-    obs = self.observation
-
-    if len(locations) > 0:
-      min_i = 0
-      min_dist = self.getEuclidDist(obs.loc, locations[0][0:2])
-      for i in range(1, len(locations)):
-        dist = self.getEuclidDist(obs.loc, locations[1][0:2])
-        if dist < min_dist:
-          min_i = i
-          min_dist = dist
-      return locations[min_i][0:2]
-    else:
-      return None
+  # Write a debug message to 
+  # the agent's log file
+  def debugMsg(self, msg):
+    if SETTINGS_DEBUG_ON:
+      if hasattr(self, 'observation'):
+        self.log.write(
+          "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
+      else:
+        self.log.write(
+          "[?-%f]: %s\n" % (time.time(), msg))
+      self.log.flush()
 
   def debug(self, surface):
     """ Allows the agents to draw on the game UI,
@@ -447,16 +471,16 @@ class Agent(object):
         active, and it will only be called for the active team.
     """
     import pygame
-    if self.id == 0:
+    if self.id == 1:
       # First agent clears the screen
       surface.fill((0,0,0,0))
       if SETTINGS_DEBUG_ON:
-        if SETTINGS_DEBUG_SHOW_PEACE_ZONES:
-          self.drawPeaceZones(pygame, surface)
+        if SETTINGS_DEBUG_SHOW_DOMINATION:
+          self._drawCPDomination(pygame, surface)
         if SETTINGS_DEBUG_SHOW_BASES:
-          self.drawBases(pygame, surface)
+          self._drawBases(pygame, surface)
         if SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS:
-          self.drawKnownAmmoSpots(pygame, surface)
+          self._drawKnownAmmoSpots(pygame, surface)
   
     # Selected agents draw their info
     if self.selected:
@@ -464,24 +488,29 @@ class Agent(object):
         pygame.draw.line(surface,(0,0,0),self.observation.loc, self.goal)
       if SETTINGS_DEBUG_ON:
         if SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS:
-          self.drawVisibleObjects(pygame, surface)
+          self._drawVisibleObjects(pygame, surface)
         if SETTINGS_DEBUG_SHOW_VISIBLE_FOES:
-          self.drawVisibleFoes(pygame, surface)
-        self.drawDebugTextSurface(pygame, surface)
-  
-  def drawVisibleFoes(self, pygame, surface):
+          self._drawVisibleFoes(pygame, surface)
+        self._drawDebugTextSurface(pygame, surface)
+
+  #################
+  #    Private    #
+  # debug methods #
+  #################
+
+  def _drawVisibleFoes(self, pygame, surface):
     for o in self.observation.foes:
       pygame.draw.line(surface, (127,127,127), self.observation.loc, o[0:2])
   
-  def drawVisibleObjects(self, pygame, surface):
+  def _drawVisibleObjects(self, pygame, surface):
     for o in self.observation.objects:
       pygame.draw.line(surface, (255,255,255), self.observation.loc, o[0:2])
 
-  def drawPeaceZones(self, pygame, surface):
+  def _drawCPDomination(self, pygame, surface):
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
     for cp in self.observation.cps:
       txt = font.render(
-        "%.2f" % (self.getPeaceValue(cp[0:2]),), 
+        "%.2f" % (self.getDominationValue(cp[0:2]),), 
         True,
         (0,0,255)
       )
@@ -494,20 +523,20 @@ class Agent(object):
       surface.blit(txt2, (cp[0], cp[1]+10))
       pygame.draw.circle(surface, (255,0,0), cp[0:2], HOTSPOT_RANGE,2)
 
-  def drawBases(self, pygame, surface):
+  def _drawBases(self, pygame, surface):
     if self.__class__.home_base is not None:
       font = pygame.font.Font(pygame.font.get_default_font(), 10)
       txt = font.render("@", False, (255,255,255))
       surface.blit(txt, self.__class__.home_base)
       surface.blit(txt, self.__class__.enemy_base)
 
-  def drawKnownAmmoSpots(self, pygame, surface):
+  def _drawKnownAmmoSpots(self, pygame, surface):
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
     for spot in self.__class__.ammoSpots:
       txt = font.render("*", False, (255,255,255))
       surface.blit(txt, spot)
     
-  def drawDebugTextSurface(self, pygame, surface):
+  def _drawDebugTextSurface(self, pygame, surface):
     x = self.observation.loc[0]
     y = self.observation.loc[1]
     font = pygame.font.Font(pygame.font.get_default_font(), 10)
@@ -525,6 +554,7 @@ class Agent(object):
       txt_ammo = font.render("%d" % (self.observation.ammo,), True, (255,0,0))
       surface.blit(txt_ammo, (x-10,y-10))
 
+  ##################################################
 
   def finalize(self, interrupted=False):
     """ This function is called after the game ends, 
