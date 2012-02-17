@@ -238,9 +238,10 @@ class Agent(object):
    
     self.debugMsg("2")
     #Attack strategy 1
-    if self.motivation is not MOTIVATION_AMMO and self.attack_strat1:
+    if not(self.motivation is MOTIVATION_AMMO or self.motivation is MOTIVATION_SHOOT_TARGET) and self.attack_strat1:
       self.executeStrategy('attack1')
     self.debugMsg("3")
+    
     # Shoot enemies
     shoot = False
     if (obs.ammo > 0 and 
@@ -330,7 +331,7 @@ class Agent(object):
       own_loc = self.observation.loc
       if self.__class__.enemy_base is not None:
         dist_to_enemy_base = self.getEuclidDist(self.__class__.enemy_base, own_loc)
-        if dist_to_enemy_base > ENEMY_BASE_RANGE + 15: #stand a little outside enemy base
+        if dist_to_enemy_base > 3 * ENEMY_BASE_RANGE: #stand a little outside enemy base
           self.goal = self.__class__.enemy_base
           self.motivation = MOTIVATION_ENEMY_BASE
         #Agent might be in the enemy base anyway  
@@ -342,12 +343,12 @@ class Agent(object):
           print "within range of enemy base"
           self.debugMsg("within range of enemy base")
           nearest_ammo = self.getClosestLocation(self.ammoSpots)
-          if(self.getEuclidDist(nearest_ammo, own_loc) <= FIND_AMMO_RANGE):
-            self.goal = nearest_ammo
-            self.motivation = MOTIVATION_AMMO
-          else:
-            self.goal = own_loc
-            self.motivation = MOTIVATION_STAY_PUT
+          #if(self.getEuclidDist(nearest_ammo, own_loc) <= FIND_AMMO_RANGE):
+          self.goal = nearest_ammo
+          self.motivation = MOTIVATION_AMMO
+          #else:
+          #  self.goal = own_loc
+          #  self.motivation = MOTIVATION_STAY_PUT
 
   def debugMsg(self, msg):
     if SETTINGS_DEBUG_ON:
