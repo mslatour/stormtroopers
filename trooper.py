@@ -59,6 +59,8 @@ MOTIVATION_CAPTURE_CP = 'C'
 MOTIVATION_GUARD_CP = 'G'
 # Motivation: Pickup ammo pack
 MOTIVATION_AMMO = 'A'
+# Motivation: Wait for ammo on spot
+MOTIVATION_AMMO_SPOT = 'AS'
 # Motivation: User clicked
 MOTIVATION_USER_CLICK = 'U'
 # Motivation: Shoot an enemy
@@ -215,13 +217,6 @@ class Agent(object):
   # * Feature retrieval * #
   #########################
 
-  # Returns the distance between
-  # two coordinates using sqrt(dx^2+dy^2)
-  def getEuclidDist(self, c1, c2):
-    if c1 is None or c2 is None:
-      return None
-    return ((c1[0]-c2[0])**2+(c1[1]-c2[1])**2)**0.5
-  
   # Returns the number of friends (not self)
   # that are near to the coordinate
   def getHotspotValue(self, coord):
@@ -229,7 +224,7 @@ class Agent(object):
       return None
     counter = 0
     for friend in self.observation.friends:
-      if self.getEuclidDist(friend[0:2], coord) < HOTSPOT_RANGE:
+      if point_dist(friend[0:2], coord) < HOTSPOT_RANGE:
         counter += 1
     return counter;
 
@@ -276,8 +271,8 @@ class Agent(object):
     return (
       self.getDominationValue(coord)
       + self.getCrowdedValue(coord)
-      - self.getEuclidDist(coord, self.__class__.home_base)
-      - min(map(lambda x: getEuclidDist(coord, x), self.__class__.ammoSpots))
+      - point_dist(coord, self.__class__.home_base)
+      - min(map(lambda x: point_dist(coord, x), self.__class__.ammoSpots))
     )
 
   # Returns the control points
@@ -315,14 +310,14 @@ class Agent(object):
 
   def getClosestLocation(self, locations):
     """ Returns the closest location from the set
-        in terms of euclid distance to the current location
+        in terms of point distance to the current location
     """
     obs = self.observation
     if len(locations) > 0:
       min_i = 0
-      min_dist = self.getEuclidDist(obs.loc, locations[0][0:2])
+      min_dist = point_dist(obs.loc, locations[0][0:2])
       for i in range(1, len(locations)):
-        dist = self.getEuclidDist(obs.loc, locations[1][0:2])
+        dist = point_dist(obs.loc, locations[i][0:2])
         if dist < min_dist:
           min_i = i
           min_dist = dist
@@ -338,14 +333,111 @@ class Agent(object):
     """ This function is called every step and should
         return a tuple in the form: (turn, speed, shoot)
     """
+    
+    obs = self.observation
+
+    if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
+      self.debugMsg("Sleeping")
+      return (0,0,0)
+
+    # Check if agent reached goal.
+    if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
+      self.goal = None
+
+    # If agent already has a goal
+    # check if the motivation is still accurate
+    if self.goal is not None:
+      self.validateMotivation()
+
+    # Drive to where the user clicked
+    if self.selected and self.observation.clicked:
+      self.motivation = MOTIVATION_USER_CLICK
+      self.goal = obs.clicked
+
+    if self.id == 2:
+      return self.action_defend()
+    else:
+      return self.action_normal()  
+  
+  def action_defend(self):  
+    obs = self.observation
+          
+    # If there isn't sufficient ammo
+    # and there is ammo around
+    ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
+    if ammopacks and obs.ammo < SUFFICIENT_AMMO:
+        self.goal = self.getClosestLocation(ammopacks)
+        self.motivation = MOTIVATION_AMMO
+    
+    # If enemies are in sight and there is 
+    # enough ammo, go towards the enemy.
+    shoot = False
+    if (obs.ammo > 0 and obs.foes):
+      self.goal = self.getClosestLocation(obs.foes)
+      self.debugMsg("*> Go to enemy (%d,%d)" % self.goal)
+      self.motivation = MOTIVATION_SHOOT_TARGET
+      # If the enemy is within range, shoot.
+      if(point_dist(self.goal, obs.loc) < self.settings.max_range
+        and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
+        self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+        shoot = True
+    
+    # If no goal was set.
+    if self.goal is None:
+      # If there is enough ammo and there are friendly CPs
+      if obs.ammo >= SUFFICIENT_AMMO and len(self.friendlyCPs) >= 1:
+        # Find the closest control point
+        self.goal = self.getClosestLocation(self.friendlyCPs)
+        # If the closest control point has a low domination value
+        if self.getDominationValue(self.goal) < 0.7:
+          # Guard it
+          self.motivation = MOTIVATION_GUARD_CP
+        else:
+          # Else guard the control point with the lowest
+          # domination value
+          self.goal = min(
+            lambda x: self.getDominationValue(x),
+            self.friendlyCps
+          )
+          self.motivation = MOTIVATION_GUARD_CP
+      # If there is not enough ammo and there are known ammo spots,
+      # wait on the ammo spot.
+      elif self.ammoSpots and obs.ammo < SUFFICIENT_AMMO:
+        self.goal = self.getClosestLocation(self.ammoSpots)
+        self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
+        self.motivation = MOTIVATION_AMMO_SPOT
+      # Else go to a random control point
+      else:
+        self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+        self.debugMsg("*> Walking random (%d,%d)" % self.goal)
+      
+    # Compute path, angle and drive
+    path = find_path(obs.loc, self.goal, self.mesh, self.grid, self.settings.tilesize)
+    if path:
+      dx = path[0][0]-obs.loc[0]
+      dy = path[0][1]-obs.loc[1]
+      turn = angle_fix(math.atan2(dy, dx)-obs.angle)
+      if turn > self.settings.max_turn or turn < -self.settings.max_turn:
+          shoot = False
+      speed = (dx**2 + dy**2)**0.5
+    else:
+      turn = 0
+      speed = 0
+
+    self.updateTrendingSpot()
+    
+    return (turn, speed, shoot)
+
+  def action_normal(self):
+    """ This function is called every step and should
+        return a tuple in the form: (turn, speed, shoot)
+    """
     obs = self.observation
     
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
       self.debugMsg("Sleeping")
       return (0,0,0)
-
-    self.debugMsg("Foes: %s" % (obs.foes,))
 
     # Check if agent reached goal.
     if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
@@ -442,6 +534,10 @@ class Agent(object):
       if ((self.goal[0], self.goal[1], 'Ammo') not in obs.objects):
         self.goal = None
         self.motivation = None
+    elif self.motivation == MOTIVATION_AMMO_SPOT:
+      if self.getClosestLocation(self.ammoSpots) != self.goal:
+        self.goal = self.getClosestLocation(self.ammoSpots)
+        self.motivation == MOTIVATION_AMMO_SPOT
     elif self.motivation == MOTIVATION_SHOOT_TARGET:
       if self.goal not in map(lambda x: x[0:2], obs.foes):
         self.goal = None
