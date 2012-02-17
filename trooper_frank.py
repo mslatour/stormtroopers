@@ -1,23 +1,45 @@
 import time
 
-# Parameters
-CROWDED_HOTSPOT = 3
-SUFFICIENT_AMMO = 3
-PEACE_THRESHOLD = 5
+##############################
+##  *** Global Settings *** ##
+####### *************** ######
+##############################
 
-# World knowledge
+##############
+# Parameters #
+##############
+# Number of agents that make a spot crowded.
+CROWDED_HOTSPOT = 3
+# Range in pixels that still counts as the same hotspot.
+HOTSPOT_RANGE = 20
+# The number of turns before a control point is considered peaceful.
+PEACE_THRESHOLD = 5
+# Number of ammo that counts as enough.
+SUFFICIENT_AMMO = 3
+
+###################
+# World knowledge #
+###################
 NUM_AMMO_SPOTS = 6
 DEFAULT_FIELD_TILESIZE = 16 # in case not provided in settings
 DEFAULT_FIELD_WIDTH = 41    # in case not provided in settings
 DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 
-# Behavior settings:
+#####################
+# Behavior settings #
+#####################
+# Agents who died don't think about their destinations
 SETTINGS_DEAD_CANT_THINK = True
 
-# Feature settings
+####################
+# Feature settings #
+####################
+# The peace value is cumulative.
 SETTINGS_PEACE_ADDS_UP = True
 
-# Debug settings
+##################
+# Debug settings #
+##################
 SETTINGS_DEBUG_ON = True
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
@@ -28,32 +50,21 @@ SETTINGS_DEBUG_SHOW_PEACE_ZONES = True
 SETTINGS_DEBUG_SHOW_KNOWN_AMMO_SPOTS = True
 SETTINGS_DEBUG_SHOW_BASES = True
 
-#######################
-# Various motivations #
-# ------------------- ##############
-# Used to keep track of the        #
-# original reason to go somewhere  #
-# to check if it is still accurate #
-###################################
-
+########################
+# Motivation constants #
+########################
 # Motivation: Capture a enemy control point
 MOTIVATION_CAPTURE_CP = 'C'
 # Motivation: Guard a friendly control point
 MOTIVATION_GUARD_CP = 'G'
 # Motivation: Pickup ammo pack
 MOTIVATION_AMMO = 'A'
+# Motivation: Wait for ammo on spot
+MOTIVATION_AMMO_SPOT = 'AS'
 # Motivation: User clicked
 MOTIVATION_USER_CLICK = 'U'
 # Motivation: Shoot an enemy
 MOTIVATION_SHOOT_TARGET = 'S'
-
-
-########
-# Ideas:
-# - Guard CP's without any friends
-# - Abandon peacefull CPs to give backup to
-#   the more restless CPs
-# - Improve the path planning
 
 class Agent(object):
   
@@ -131,7 +142,15 @@ class Agent(object):
     """
     self.observation = observation
     self.selected = observation.selected
-  
+    
+    # Store base locations
+    if self.__class__.home_base is None and self.id == 0:
+      self.__class__.home_base = (observation.loc[0]+16, observation.loc[1]+8)
+      self.__class__.enemy_base = \
+        self.getSymmetricOpposite(self.__class__.home_base)
+    
+    self.updateHotSpot()
+      
   def action(self):
     if self.id == 2:
       (turn,speed,shoot) = self.action_defend()
@@ -153,10 +172,6 @@ class Agent(object):
       self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
-      if self.__class__.home_base is None:
-        self.debugMsg("Found home base at %s" % (obs.loc,))
-        self.__class__.home_base = obs.loc
-        self.__class__.enemy_base = self.getSymmetricOpposite(obs.loc)
       self.debugMsg("Sleeping")
       return (0,0,0)
 
@@ -171,8 +186,8 @@ class Agent(object):
     if self.goal is not None:
       self.validateMotivation()
 
-    if self.goal is not None:
-      self.log.write("*> Go to: (%d,%d)" % (self.goal[0], self.goal[1]))
+    #if self.goal is not None:
+     # self.log.write("*> Go to: (%d,%d)" % (self.goal[0], self.goal[1]))
     
     # Drive to where the user clicked
     if self.selected and self.observation.clicked:
@@ -181,36 +196,37 @@ class Agent(object):
       
     ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     
+    if ammopacks and obs.ammo < 3:
+        self.goal = self.getClosestLocation(ammopacks)
+        self.debugMsg("*> Searching for ammo (%d,%d)" % (self.goal[0],self.goal[1]))
+        self.motivation = MOTIVATION_AMMO
+    
     # Shoot enemies
     shoot = False
-    if (obs.ammo > 0 and 
-        obs.foes and 
-        point_dist(obs.foes[0][0:2], obs.loc) < self.settings.max_range
-        and not line_intersects_grid(obs.loc, obs.foes[0][0:2], self.grid, self.settings.tilesize)):
+    if (obs.ammo > 0 and obs.foes):
       self.goal = obs.foes[0][0:2]
-      self.motivation = MOTIVATION_SHOOT_TARGET
-      self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
-      shoot = True
-
-    # If you can't think of anything to do
-    # at least walk to a friendly control point
-    if self.goal is None and len(self.friendlyCPs) > 0 and not obs.ammo < SUFFICIENT_AMMO:
-      self.goal = self.getClosestLocation(self.getQuietRestlessFriendlyCPs())
-      if self.goal is not None:
-        self.motivation = MOTIVATION_GUARD_CP
-        self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
-    elif ammopacks:
-      self.updateAllAmmoSpots(ammopacks)
-      if obs.ammo < SUFFICIENT_AMMO:
-        self.goal = self.getClosestLocation(ammopacks)
-        self.motivation = MOTIVATION_AMMO
-        self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
-    elif (self.getClosestLocation(obs.cps) in self.enemyCPs) or (self.getClosestLocation(obs.cps) not in self.friendlyCPs):
-      self.goal = self.getClosestLocation(obs.cps)
-    else:
-      self.goal = self.getClosestLocation(self.ammoSpots)
-      self.debugMsg("*> Waiting for ammo (%d,%d)" % (self.goal[0],self.goal[1]))
-  
+      self.debugMsg("*> Turning to enemy (%d,%d)" % (self.goal[0],self.goal[1]))
+      if(point_dist(obs.foes[0][0:2], obs.loc) < self.settings.max_range
+        and not line_intersects_grid(obs.loc, obs.foes[0][0:2], self.grid, self.settings.tilesize)):
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
+        shoot = True
+      
+    if self.goal is None:
+      if obs.ammo > 2 and len(self.friendlyCPs) >= 1:
+        self.goal = self.getClosestLocation(self.friendlyCPs)
+        if self.getPeaceValue(self.goal) < 0.7:
+          self.motivation = MOTIVATION_GUARD_CP
+        else:
+          self.goal = self.hotspot[random.randint(0,len(self.hotspot)-1)][0:2]
+          self.motivation = MOTIVATION_GUARD_CP
+      elif self.ammoSpots and obs.ammo < 3:
+        self.goal = self.getClosestLocation(self.ammoSpots)
+        self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
+        self.motivation = MOTIVATION_AMMO_SPOT
+      else:
+        self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+        self.debugMsg("*> Walking random (%d,%d)" % (self.goal[0],self.goal[1]))
       
     # Compute path, angle and drive
     path = find_path(obs.loc, self.goal, self.mesh, self.grid, self.settings.tilesize)
@@ -241,10 +257,6 @@ class Agent(object):
       self.setTurnStats()
     
     if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
-      if self.__class__.home_base is None:
-        self.debugMsg("Found home base at %s" % (obs.loc,))
-        self.__class__.home_base = obs.loc
-        self.__class__.enemy_base = self.getSymmetricOpposite(obs.loc)
       self.debugMsg("Sleeping")
       return (0,0,0)
 
@@ -281,8 +293,8 @@ class Agent(object):
     # Walk to an enemy CP
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
-      self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
       if self.goal is not None:
+        self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
     
@@ -295,7 +307,8 @@ class Agent(object):
       self.goal = obs.foes[0][0:2]
       self.motivation = MOTIVATION_SHOOT_TARGET
       self.debugMsg("*> Shoot (%d,%d)" % (self.goal[0],self.goal[1]))
-      shoot = True
+      if self.goal not in obs.friends:
+        shoot = True
 
     # If you can't think of anything to do
     # at least walk to a friendly control point
@@ -385,6 +398,11 @@ class Agent(object):
       )
     )
 
+  def updateHotSpot(self):
+    self.__class__.hotspot[self.id] = self.observation.loc
+    if self.id == 5:
+      self.debugMsg("Hotspots: %s" % (self.__class__.hotspot,))
+
   def updateAllAmmoSpots(self, spots):
     if len(self.__class__.ammoSpots) < NUM_AMMO_SPOTS:
       for spot in spots:
@@ -413,7 +431,11 @@ class Agent(object):
     elif self.motivation == MOTIVATION_AMMO:
       if ((self.goal[0], self.goal[1], 'Ammo') not in obs.objects):
         self.goal = None
-        self.motivation = None
+        self.motivation == None
+    elif self.motivation == MOTIVATION_AMMO_SPOT:
+      if self.getClosestLocation(self.ammoSpots) != self.goal:
+        self.goal = self.getClosestLocation(self.ammoSpots)
+        self.motivation == MOTIVATION_AMMO_SPOT
     elif self.motivation == MOTIVATION_SHOOT_TARGET:
       if self.goal not in map(lambda x: x[0:2], obs.foes):
         self.goal = None
@@ -430,21 +452,35 @@ class Agent(object):
     return abs(c1[0]-c2[0])+abs(c1[1]-c2[1])
   
   def getHotspotValue(self, coord):
-    if coord in self.__class__.hotspot:
-      return len(self.__class__.hotspot[coord])
-    else:
-      return 0
+    if coord is None:
+      return None
+
+    hs = self.__class__.hotspot
+    counter = 0
+    for agent in hs:
+      if self.getEuclidDist(hs[agent], coord) < HOTSPOT_RANGE:
+        counter += 1
+    return counter;
 
   def getTrendingSpotValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.trendingSpot:
       return len(self.__class__.trendingSpot[coord])
     else:
       return 0
 
   def getCrowdedValue(self, coord):
+    if coord is None:
+      return None
+
     return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
 
   def getPeaceValue(self, coord):
+    if coord is None:
+      return None
+
     if coord in self.__class__.inFriendlyHands:
       return self.__class__.inFriendlyHands[coord]/float(self.observation.step)
     else:
@@ -551,11 +587,18 @@ class Agent(object):
         (0,0,255)
       )
       surface.blit(txt, cp[0:2])
+      txt2 = font.render(
+        "%d" % (self.getHotspotValue(cp[0:2]),),
+        True,
+        (255,0,0)
+      )
+      surface.blit(txt2, (cp[0], cp[1]+10))
+      pygame.draw.circle(surface, (255,0,0), cp[0:2], HOTSPOT_RANGE,2)
 
   def drawBases(self, pygame, surface):
     if self.__class__.home_base is not None:
       font = pygame.font.Font(pygame.font.get_default_font(), 10)
-      txt = font.render("!", False, (255,255,255))
+      txt = font.render("@", False, (255,255,255))
       surface.blit(txt, self.__class__.home_base)
       surface.blit(txt, self.__class__.enemy_base)
 
