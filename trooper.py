@@ -400,8 +400,6 @@ class Agent(object):
     if self.goal is None:
       self.goal = obs.loc
 
-    print "Goal %s" % (self.goal,)
-    
     self.updateTrendingSpot()
 
     if self.goal == obs.loc:
@@ -485,7 +483,6 @@ class Agent(object):
     living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
     if living:
       self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-      print "SG %s" % (self.goal,)
       self.motivation = MOTIVATION_SHOOT_TARGET
       # Check if enemy in fire range
       if (
