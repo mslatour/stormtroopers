@@ -2,9 +2,24 @@ import domination.run
 import sys
 
 DEFAULT_RUN_SETTINGS = {
-  'mode': "default",
+  'agent': "default",
+  'mode': "test",
   'verbose': "True",
-  'render': "True"
+  'render': "True",
+  'output': None
+}
+
+DEFAULT_OPPONENT = "domination/agent.py"
+
+AGENT_MAPPINGS = {
+  "default" : "trooper.py",
+  "daniel" : "trooper_daniel.py",
+  "frank"  : "trooper_frank.py",
+  "sicco"  : "sicco.py",
+  "sander" : "trooper_sander.py",
+  "offence" : "offence_trooper.py",
+  "defence" : "defence_trooper.py",
+  "reactive" : "reactive_trooper.py"
 }
 
 class MyScenario(domination.run.Scenario):
@@ -23,28 +38,33 @@ def applySettings(args):
   return settings
 
 def run(settings):
-  mode = settings["mode"]
-  if mode == "sander":
-    MyScenario.test('trooper_sander.py', 'domination/agent.py')
-  elif mode == "frank":
-    MyScenario.test('trooper_frank.py', 'domination/agent.py')
-  elif mode == "daniel":
-    MyScenario.test('trooper_daniel.py', 'domination/agent.py')
-  elif mode == "sicco":
-    MyScenario.test('trooper_sicco.py', 'domination/agent.py')
-  else:
-    MyScenario.test('trooper.py', 'domination/agent.py')
+  try:
+    {
+      "test" : lambda x: MyScenario.test(
+        AGENT_MAPPINGS[x["agent"]], DEFAULT_OPPONENT
+      ),
+      "one_on_one" : lambda x: MyScenario.one_on_one(
+        AGENT_MAPPINGS[x["agent"]], 
+        DEFAULT_OPPONENT,
+        x["output"]
+      )
+    }[settings["mode"]](settings)
+  except KeyError:
+    print "Unsupported option, check --help for valid options"
 
 if __name__ == "__main__":
   if len(sys.argv) == 2 and sys.argv[1] == "--help":
     print "Usage: python application.py [<settings>]"
     print " Settings:"
-    print " ---------------------------------------------------------------"
+    print " .-------------------------------------------------------------."
     print " | Setting:  | Default:  | Values:                             |"
-    print " ---------------------------------------------------------------"
-    print " | --mode    | default   | {default|sander|frank|daniel|sicco} |"
+    print " |-------------------------------------------------------------|"
+    print " | --agent   | default   | {default|sander|frank|daniel|sicco  |"
+    print " |                          offence|defence|reactive}          |"
+    print " | --mode    | test      | {test|one_on_one}                   |"
+    print " | --output  | None      | A valid directory                   |"
     print " | --verbose | True      | {True|False}                        |"
     print " | --render  | True      | {True|False}                        |"
-    print " ---------------------------------------------------------------"
+    print " '-------------------------------------------------------------'"
   else:
     run(applySettings(sys.argv))
