@@ -290,7 +290,7 @@ class Agent(object):
   # or None if none is reachable
   def getClosestEnemyInFireRange(self):
     obs = self.observation
-    if foes:
+    if obs.foes:
       closest_foe = getClosestLocation(obs.foes)[0:2]
       if(
         point_dist(closest_foe, obs.loc) < self.settings.max_range
@@ -374,6 +374,7 @@ class Agent(object):
     
     obs = self.observation
 
+    action = None
     try:
       if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
         self.debugMsg("Sleeping")
@@ -393,7 +394,6 @@ class Agent(object):
         self.motivation = MOTIVATION_USER_CLICK
         self.goal = obs.clicked
 
-      action = None
       if self.goal is None:
         if self.strategy == STRATEGY_DEFENCE:
           action = self.action_defend()
