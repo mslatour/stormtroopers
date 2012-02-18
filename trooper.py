@@ -271,11 +271,6 @@ class Agent(object):
       return None
     return self.getTrendingSpotValue(coord) + self.getHotspotValue(coord)
 
-  # [Deprecated]
-  # Use getDominationValue instead!
-  def getPeaceValue(self, cp):
-    self.getDominationValue(cp)
-
   # Returns the percentage of turns that the
   # control point has been in friendly hands
   def getDominationValue(self, cp):
