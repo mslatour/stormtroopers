@@ -44,7 +44,8 @@ SETTINGS_DOMINATION_ADDS_UP = True
 ##################
 # Debug settings #
 ##################
-SETTINGS_DEBUG_ON = True
+SETTINGS_DEBUG_ON = False
+SETTINGS_DEBUG_ERROR_ONLY = True
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
 SETTINGS_DEBUG_SHOW_ID = True
@@ -360,42 +361,47 @@ class Agent(object):
     
     obs = self.observation
 
-    if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
-      self.debugMsg("Sleeping")
-      return (0,0,False)
+    try:
+      if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
+        self.debugMsg("Sleeping")
+        return (0,0,False)
 
-    # Check if agent reached goal.
-    if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
-      self.goal = None
+      # Check if agent reached goal.
+      if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
+        self.goal = None
 
-    # If agent already has a goal
-    # check if the motivation is still accurate
-    if self.goal is not None:
-      self.validateMotivation()
+      # If agent already has a goal
+      # check if the motivation is still accurate
+      if self.goal is not None:
+        self.validateMotivation()
 
-    # Drive to where the user clicked
-    if self.selected and self.observation.clicked:
-      self.motivation = MOTIVATION_USER_CLICK
-      self.goal = obs.clicked
+      # Drive to where the user clicked
+      if self.selected and self.observation.clicked:
+        self.motivation = MOTIVATION_USER_CLICK
+        self.goal = obs.clicked
 
-    self.shoot = False
-    if self.goal is None:
-      self.debugMsg("Execute strategy")
-      if self.strategy == STRATEGY_DEFENCE:
-        self.debugMsg(1)
-        self.action_defend()
-        self.debugMsg(2)
-      elif self.strategy == STRATEGY_OFFENCE:
-        self.debugMsg(3)
-        self.action_offence()
-        self.debugMsg(4)
+      self.shoot = False
+      if self.goal is None:
+        self.debugMsg("Execute strategy")
+        if self.strategy == STRATEGY_DEFENCE:
+          self.debugMsg(1)
+          self.action_defend()
+          self.debugMsg(2)
+        elif self.strategy == STRATEGY_OFFENCE:
+          self.debugMsg(3)
+          self.action_offence()
+          self.debugMsg(4)
+        else:
+          self.debugMsg(5)
+          self.action_normal()
+          self.debugMsg(6)
+        self.debugMsg("Strategy executed")
       else:
-        self.debugMsg(5)
-        self.action_normal()
-        self.debugMsg(6)
-      self.debugMsg("Strategy executed")
-    else:
-      self.debugMsg("Goal already found: (%d,%d)" % self.goal)
+        self.debugMsg("Goal already found: (%d,%d)" % self.goal)
+        
+    except Exception as exp:
+       self.debugMsg("Goal: %s, exception: %s" % (self.goal, exp), True)
+       self.goal = None
     
     if self.goal is None:
       self.goal = obs.loc
@@ -550,8 +556,8 @@ class Agent(object):
           # Else guard the control point with the lowest
           # domination value
           self.goal = min(
-            lambda x: self.getDominationValue(x),
-            self.__class__.friendlyCPs
+            self.__class__.friendlyCPs,
+            key=lambda x: self.getDominationValue(x),
           )
           self.motivation = MOTIVATION_GUARD_CP
       # If there is not enough ammo and there are known ammo spots,
@@ -668,14 +674,22 @@ class Agent(object):
 
   # Write a debug message to 
   # the agent's log file
-  def debugMsg(self, msg):
+  def debugMsg(self, msg, error=False):
     if SETTINGS_DEBUG_ON:
       if hasattr(self, 'observation'):
-        self.log.write(
-          "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
+        if error:
+          self.log.write(
+            "[%d-%f|!ERROR!]: %s\n" % (self.observation.step, time.time(), msg))
+        elif not SETTINGS_DEBUG_ERROR_ONLY:
+          self.log.write(
+            "[%d-%f]: %s\n" % (self.observation.step, time.time(), msg))
       else:
-        self.log.write(
-          "[?-%f]: %s\n" % (time.time(), msg))
+        if error:
+          self.log.write(
+            "[?-%f|!ERRROR!]: %s\n" % (time.time(), msg))
+        elif not SETTINGS_DEBUG_ERROR_ONLY:
+          self.log.write(
+            "[?-%f]: %s\n" % (time.time(), msg))
       self.log.flush()
 
   def debug(self, surface):
