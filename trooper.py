@@ -417,7 +417,7 @@ class Agent(object):
       if self.goal == obs.loc:
         return (0,0,False)
       else:
-        return self.getActionTripple()
+        return self.getActionTriple()
     else:
       return action
   
@@ -447,7 +447,7 @@ class Agent(object):
       if self.goal is not None:
         self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
         self.motivation = MOTIVATION_AMMO
-        return self.getActionTripple()
+        return self.getActionTriple()
       # Else go to a known ammo spot
       elif self.ammoSpots is not None:
         # If you are already on an ammo spot, stay put.
@@ -459,7 +459,7 @@ class Agent(object):
         else:
           self.goal = self.getClosestLocation(self.ammoSpots)
           self.motivation = MOTIVATION_AMMO
-          return self.getActionTripple()
+          return self.getActionTriple()
  
     # Attack strategy 1
     eb = self.__class__.enemy_base;
@@ -472,7 +472,7 @@ class Agent(object):
         #stand a little outside enemy base
         self.goal = eb
         self.motivation = MOTIVATION_ENEMY_BASE
-        return self.getActionTripple()
+        return self.getActionTriple()
       
       # if near enemy spawn point
       # (and no enemy --> handled implicitly?)
@@ -497,9 +497,9 @@ class Agent(object):
         )
       ):
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        return self.getActionTripple(True)
+        return self.getActionTriple(True)
       else:
-        return self.getActionTripple()
+        return self.getActionTriple()
       
     #############################
     # 4) Go to nearby ammo spot #
@@ -508,7 +508,7 @@ class Agent(object):
       nearest_ammo = self.getClosestLocation(self.ammoSpots)
       self.goal = nearest_ammo
       self.motivation = MOTIVATION_AMMO
-      return self.getActionTripple()
+      return self.getActionTriple()
 
     #####################################
     # 5) Wait for enemies to come alive #
@@ -571,7 +571,7 @@ class Agent(object):
         self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
         self.debugMsg("*> Walking random (%d,%d)" % self.goal)
     if self.goal is not None:
-      return self.getActionTripple(shoot)
+      return self.getActionTriple(shoot)
     else:
       return (0,0,shoot)
 
@@ -621,9 +621,9 @@ class Agent(object):
         self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
 
     if self.goal is not None:
-      return self.getActionTripple(shoot)
+      return self.getActionTriple(shoot)
     else:
-      return self.getActionTripple(shoot)
+      return self.getActionTriple(shoot)
 
   # Checks if the current motivation to
   # go to the goal is still valid.
@@ -663,9 +663,9 @@ class Agent(object):
         self.goal = None
         self.motivation = None
     
-  # Return action tripple
+  # Return action triple
   # Possible to preset shoot, turn or speed
-  def getActionTripple(self,shoot=False,turn=None,speed=None):
+  def getActionTriple(self,shoot=False,turn=None,speed=None):
     obs = self.observation
     if turn is None or speed is None:
       # Compute path, angle and drive
