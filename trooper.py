@@ -44,8 +44,8 @@ SETTINGS_DOMINATION_ADDS_UP = True
 ##################
 # Debug settings #
 ##################
-SETTINGS_DEBUG_ON = False
-SETTINGS_DEBUG_ERROR_ONLY = True
+SETTINGS_DEBUG_ON = True
+SETTINGS_DEBUG_ERROR_ONLY = False
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
 SETTINGS_DEBUG_SHOW_ID = True
@@ -701,7 +701,7 @@ class Agent(object):
         active, and it will only be called for the active team.
     """
     import pygame
-    if self.id == 1:
+    if self.id == 0:
       # First agent clears the screen
       surface.fill((0,0,0,0))
       if SETTINGS_DEBUG_ON:
