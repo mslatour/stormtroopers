@@ -45,7 +45,7 @@ SETTINGS_DOMINATION_ADDS_UP = True
 # Debug settings #
 ##################
 SETTINGS_DEBUG_ON = True
-SETTINGS_DEBUG_ERROR_ONLY = True
+SETTINGS_DEBUG_ERROR_ONLY = False
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
 SETTINGS_DEBUG_SHOW_ID = True
@@ -195,6 +195,11 @@ class Agent(object):
       # Update enemy CPs
       self.__class__.enemyCPs = map(lambda x:x[0:2], 
         filter(lambda x: x[2] != self.team, obs.cps))
+    
+      # Update ammo packs  
+      ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
+      if ammopacks:
+        self.updateAllAmmoSpots(ammopacks)
 
       # Update inFriendlyHands stat
       if SETTINGS_DOMINATION_ADDS_UP:
@@ -289,7 +294,7 @@ class Agent(object):
       closest_foe = self.getClosestLocation(obs.foes)[0:2]
       if(
         point_dist(closest_foe, obs.loc) < self.settings.max_range
-        and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)
+        and not line_intersects_grid(obs.loc, closest_foe, self.grid, self.settings.tilesize)
       ):
         return closest_foe
     return None
@@ -429,11 +434,10 @@ class Agent(object):
     # 5) Wait for enemies to come alive  #
     ######################################
     obs = self.observation
+    eb = self.__class__.enemy_base
+    ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     self.debugMsg("Offence strategy")
     
-    ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
-    if ammopacks:
-      self.updateAllAmmoSpots(ammopacks)
     
     #ONLY GO TO AMMO PACKS THAT ARE NOT BEGIN VISITED BY TEAM
     feasible_ammo_spots = self.getQuietAmmoSpots()
@@ -441,6 +445,7 @@ class Agent(object):
     # 1) Make sure you have ammo #
     ##############################
     if obs.ammo < SUFFICIENT_AMMO:
+      self.debugMsg("Need to recharge ammo")
       self.goal = self.getClosestLocation(ammopacks)
       # If you see a ammo pack nearby, take it
       if self.goal is not None:
@@ -469,30 +474,36 @@ class Agent(object):
     # 2) Shoot live enemies #
     #########################
     # Aim at the closest enemy outside the enemy base
-    living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
-    if living:
-      self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-      self.motivation = MOTIVATION_SHOOT_TARGET
-      # Check if enemy in fire range
-      if (
-        point_dist(self.goal, obs.loc) < self.settings.max_range and
-        not line_intersects_grid(
-          obs.loc, 
-          self.goal, 
-          self.grid, 
-          self.settings.tilesize
-        )
-      ):
-        self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        #return self.getActionTriple(True)
-        return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
-      else:
-        return self.getActionTriple()
+    if obs.foes:
+      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
+      self.debugMsg("Living: %s" % (living,))
+      if living:
+        self.debugMsg(1)
+        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        self.debugMsg(2)
+        # Check if enemy in fire range
+        if (
+          point_dist(self.goal, obs.loc) < self.settings.max_range and
+          not line_intersects_grid(
+            obs.loc, 
+            self.goal, 
+            self.grid, 
+            self.settings.tilesize
+          )
+        ):
+          self.debugMsg(3)
+          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
+          return self.getActionTriple(True)
+        else:
+          self.debugMsg(4)
+          return self.getActionTriple()
+    self.debugMsg(5)
     
     ###############################
     # 3) Move close to enemy base #
     ###############################  
-    eb = self.__class__.enemy_base;
     if eb is not None:
       dist_to_enemy_base = point_dist(eb, obs.loc)
       
@@ -654,12 +665,11 @@ class Agent(object):
         self.goal = None
         self.motivation = None
     elif self.motivation == MOTIVATION_ENEMY_BASE:
-      if(
-        self.strategy == STRATEGY_OFFENCE
-        and self.getClosestEnemyInFireRange()
-      ):
-        self.goal = None
-        self.motivation = None
+      if self.strategy == STRATEGY_OFFENCE:
+        cfoe = self.getClosestEnemyInFireRange()
+        if cfoe is not None:
+          self.goal = None
+          self.motivation = None
     elif self.motivation == MOTIVATION_AMMO_SPOT:
       if self.getClosestLocation(self.ammoSpots) != self.goal:
         self.goal = self.getClosestLocation(self.ammoSpots)
@@ -753,6 +763,9 @@ class Agent(object):
   def _drawVisibleFoes(self, pygame, surface):
     for o in self.observation.foes:
       pygame.draw.line(surface, (127,127,127), self.observation.loc, o[0:2])
+    cfoe = self.getClosestEnemyInFireRange()
+    if cfoe is not None:
+      pygame.draw.line(surface, (255,0,0), self.observation.loc, cfoe[0:2])
   
   def _drawVisibleObjects(self, pygame, surface):
     for o in self.observation.objects:
