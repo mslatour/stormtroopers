@@ -286,6 +286,20 @@ class Agent(object):
     else:
       return 0
 
+  # Returns the closest enemy that can be shot at
+  # or None if none is reachable
+  def getClosestEnemyInFireRange(self):
+    foes = self.observation.foes
+    loc = self.observation.loc
+    if foes:
+      closest_foe = getClosestLocation(foes)[0:2]
+      if(
+        point_dist(closest_foe, loc) < self.settings.max_range)
+        and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)
+      ):
+        return closest_foe
+    return None
+
   # BETA!
   # Safety score based on:
   # - distance to home base
@@ -657,6 +671,13 @@ class Agent(object):
         self.motivation = None
     elif self.motivation == MOTIVATION_AMMO:
       if ((self.goal[0], self.goal[1], 'Ammo') not in obs.objects):
+        self.goal = None
+        self.motivation = None
+    elif self.motivation == MOTIVATION_ENEMY_BASE:
+      if(
+        self.strategy = STRATEGY_OFFENCE
+        and self.getClosestEnemyInFireRange()
+      )
         self.goal = None
         self.motivation = None
     elif self.motivation == MOTIVATION_AMMO_SPOT:
