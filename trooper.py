@@ -291,7 +291,7 @@ class Agent(object):
   def getClosestEnemyInFireRange(self):
     obs = self.observation
     if obs.foes:
-      closest_foe = getClosestLocation(obs.foes)[0:2]
+      closest_foe = self.getClosestLocation(obs.foes)[0:2]
       if(
         point_dist(closest_foe, obs.loc) < self.settings.max_range
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)
@@ -575,8 +575,8 @@ class Agent(object):
           self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
           self.motivation = MOTIVATION_AMMO_SPOT
         else:
-        self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
-        self.debugMsg("*> Walking random (%d,%d)" % self.goal)
+          self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+          self.debugMsg("*> Walking random (%d,%d)" % self.goal)
       # Else go to a random control point
       else:
         self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
