@@ -294,7 +294,7 @@ class Agent(object):
     if foes:
       closest_foe = getClosestLocation(foes)[0:2]
       if(
-        point_dist(closest_foe, loc) < self.settings.max_range)
+        point_dist(closest_foe, loc) < self.settings.max_range
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)
       ):
         return closest_foe
@@ -675,9 +675,9 @@ class Agent(object):
         self.motivation = None
     elif self.motivation == MOTIVATION_ENEMY_BASE:
       if(
-        self.strategy = STRATEGY_OFFENCE
+        self.strategy == STRATEGY_OFFENCE
         and self.getClosestEnemyInFireRange()
-      )
+      ):
         self.goal = None
         self.motivation = None
     elif self.motivation == MOTIVATION_AMMO_SPOT:
