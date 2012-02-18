@@ -45,7 +45,7 @@ SETTINGS_DOMINATION_ADDS_UP = True
 # Debug settings #
 ##################
 SETTINGS_DEBUG_ON = True
-SETTINGS_DEBUG_ERROR_ONLY = False
+SETTINGS_DEBUG_ERROR_ONLY = True
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
 SETTINGS_DEBUG_SHOW_ID = True
@@ -337,6 +337,9 @@ class Agent(object):
     return filter(( lambda x: x[2] == self.team and 
       self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
   
+  def getQuietAmmoSpots(self):
+    return filter(( lambda x: self.getCrowdedValue(x[0:2]) < 1), self.ammoSpots)
+  
   # Returns the control points
   # that are in enemy hands
   # and have a low crowdedValue
@@ -403,10 +406,9 @@ class Agent(object):
           action = self.action_normal()
       else:
         self.debugMsg("Goal already found: (%d,%d)" % self.goal)
-        
     except Exception as exp:
-       self.debugMsg("Goal: %s, exception: %s" % (self.goal, exp), True)
-       self.goal = None
+      self.debugMsg("Goal: %s, exception: %s" % (self.goal, exp), True)
+      self.goal = None
     
     if self.goal is None:
       self.goal = obs.loc
@@ -438,6 +440,8 @@ class Agent(object):
     if ammopacks:
       self.updateAllAmmoSpots(ammopacks)
     
+    #ONLY GO TO AMMO PACKS THAT ARE NOT BEGIN VISITED BY TEAM
+    feasible_ammo_spots = self.getQuietAmmoSpots()
     ##############################
     # 1) Make sure you have ammo #
     ##############################
@@ -456,30 +460,18 @@ class Agent(object):
           self.motivation = MOTIVATION_STAY_PUT
           return (0,0,False)
         # Else go to a nearby ammo spot
-        else:
-          self.goal = self.getClosestLocation(self.ammoSpots)
+        elif feasible_ammo_spots is not None:
+          self.goal = self.getClosestLocation(feasible_ammo_spots)
           self.motivation = MOTIVATION_AMMO
           return self.getActionTriple()
- 
-    # Attack strategy 1
-    eb = self.__class__.enemy_base;
-    if eb is not None:
-      dist_to_enemy_base = point_dist(eb, obs.loc)
-      ###############################
-      # 2) Move close to enemy base #
-      ###############################
-      if dist_to_enemy_base > 3 * ENEMY_BASE_RANGE: 
-        #stand a little outside enemy base
-        self.goal = eb
-        self.motivation = MOTIVATION_ENEMY_BASE
+      else:
+        self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+        self.debugMsg("*> Walking random (%d,%d)" % self.goal)
         return self.getActionTriple()
-      
-      # if near enemy spawn point
-      # (and no enemy --> handled implicitly?)
-
-
+    
+    # Attack strategy 1
     #########################
-    # 3) Shoot live enemies #
+    # 2) Shoot live enemies #
     #########################
     # Aim at the closest enemy outside the enemy base
     living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
@@ -497,8 +489,22 @@ class Agent(object):
         )
       ):
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        return self.getActionTriple(True)
+        #return self.getActionTriple(True)
+        return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
       else:
+        return self.getActionTriple()
+    
+    ###############################
+    # 3) Move close to enemy base #
+    ###############################  
+    eb = self.__class__.enemy_base;
+    if eb is not None:
+      dist_to_enemy_base = point_dist(eb, obs.loc)
+      
+      if dist_to_enemy_base > 3 * ENEMY_BASE_RANGE: 
+        #stand a little outside enemy base
+        self.goal = eb
+        self.motivation = MOTIVATION_ENEMY_BASE
         return self.getActionTriple()
       
     #############################
@@ -515,9 +521,9 @@ class Agent(object):
     #####################################
     else:
       self.debugMsg("*> All enemies are probably dead")
-      self.goal = None
+      self.goal = self.__class__.enemy_base
       self.motivation = MOTIVATION_STAY_PUT
-      return (0,0,False)
+      return self.getActionTriple(False, None, 0)
 
   def action_defend(self):
     obs = self.observation
@@ -563,9 +569,14 @@ class Agent(object):
       # If there is not enough ammo and there are known ammo spots,
       # wait on the ammo spot.
       elif self.ammoSpots and obs.ammo < SUFFICIENT_AMMO:
-        self.goal = self.getClosestLocation(self.ammoSpots)
-        self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
-        self.motivation = MOTIVATION_AMMO_SPOT
+        feasible_ammo_spots = self.getQuietAmmoSpots()
+        if feasible_ammo_spots is not None:
+          self.goal = self.getClosestLocation(self.getQuietAmmoSpots())
+          self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
+          self.motivation = MOTIVATION_AMMO_SPOT
+        else:
+        self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
+        self.debugMsg("*> Walking random (%d,%d)" % self.goal)
       # Else go to a random control point
       else:
         self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
