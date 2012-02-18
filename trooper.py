@@ -289,12 +289,11 @@ class Agent(object):
   # Returns the closest enemy that can be shot at
   # or None if none is reachable
   def getClosestEnemyInFireRange(self):
-    foes = self.observation.foes
-    loc = self.observation.loc
+    obs = self.observation
     if foes:
-      closest_foe = getClosestLocation(foes)[0:2]
+      closest_foe = getClosestLocation(obs.foes)[0:2]
       if(
-        point_dist(closest_foe, loc) < self.settings.max_range
+        point_dist(closest_foe, obs.loc) < self.settings.max_range
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)
       ):
         return closest_foe
@@ -394,22 +393,14 @@ class Agent(object):
         self.motivation = MOTIVATION_USER_CLICK
         self.goal = obs.clicked
 
-      self.shoot = False
+      action = None
       if self.goal is None:
-        self.debugMsg("Execute strategy")
         if self.strategy == STRATEGY_DEFENCE:
-          self.debugMsg(1)
-          self.action_defend()
-          self.debugMsg(2)
+          action = self.action_defend()
         elif self.strategy == STRATEGY_OFFENCE:
-          self.debugMsg(3)
-          self.action_offence()
-          self.debugMsg(4)
+          action = self.action_offence()
         else:
-          self.debugMsg(5)
-          self.action_normal()
-          self.debugMsg(6)
-        self.debugMsg("Strategy executed")
+          action = self.action_normal()
       else:
         self.debugMsg("Goal already found: (%d,%d)" % self.goal)
         
@@ -422,22 +413,10 @@ class Agent(object):
 
     self.updateTrendingSpot()
 
-    if self.goal == obs.loc:
-      return (0,0,self.shoot)
+    if action is None:
+      return (0,0,False)
     else:
-      # Compute path, angle and drive
-      path = find_path(obs.loc, self.goal, self.mesh, self.grid, self.settings.tilesize)
-      if path:
-        dx = path[0][0]-obs.loc[0]
-        dy = path[0][1]-obs.loc[1]
-        turn = angle_fix(math.atan2(dy, dx)-obs.angle)
-        if turn > self.settings.max_turn or turn < -self.settings.max_turn:
-            self.shoot = False
-        speed = (dx**2 + dy**2)**0.5
-      else:
-        turn = 0
-        speed = 0
-      return (turn,speed,self.shoot)
+      return action
   
   def action_offence(self):
     ######################
@@ -465,19 +444,19 @@ class Agent(object):
       if self.goal is not None:
         self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
         self.motivation = MOTIVATION_AMMO
-        return
+        return self.getActionTripple()
       # Else go to a known ammo spot
       elif self.ammoSpots is not None:
         # If you are already on an ammo spot, stay put.
         if obs.loc in self.ammoSpots:
           self.goal = None
           self.motivation = MOTIVATION_STAY_PUT
-          return
+          return (0,0,False)
         # Else go to a nearby ammo spot
         else:
           self.goal = self.getClosestLocation(self.ammoSpots)
           self.motivation = MOTIVATION_AMMO
-          return
+          return self.getActionTripple()
  
     # Attack strategy 1
     eb = self.__class__.enemy_base;
@@ -490,7 +469,7 @@ class Agent(object):
         #stand a little outside enemy base
         self.goal = eb
         self.motivation = MOTIVATION_ENEMY_BASE
-        return
+        return self.getActionTripple()
       
       # if near enemy spawn point
       # (and no enemy --> handled implicitly?)
@@ -515,7 +494,9 @@ class Agent(object):
         )
       ):
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        self.shoot = True
+        return self.getActionTripple(True)
+      else:
+        return self.getActionTripple()
       
     #############################
     # 4) Go to nearby ammo spot #
@@ -524,7 +505,7 @@ class Agent(object):
       nearest_ammo = self.getClosestLocation(self.ammoSpots)
       self.goal = nearest_ammo
       self.motivation = MOTIVATION_AMMO
-      return
+      return self.getActionTripple()
 
     #####################################
     # 5) Wait for enemies to come alive #
@@ -533,10 +514,12 @@ class Agent(object):
       self.debugMsg("*> All enemies are probably dead")
       self.goal = None
       self.motivation = MOTIVATION_STAY_PUT
+      return (0,0,False)
 
   def action_defend(self):
     obs = self.observation
-          
+    shoot = False
+
     # If there isn't sufficient ammo
     # and there is ammo around
     ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
@@ -554,7 +537,7 @@ class Agent(object):
       if(point_dist(self.goal, obs.loc) < self.settings.max_range
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        self.shoot = True
+        shoot = True
     
     # If no goal was set.
     if self.goal is None:
@@ -584,35 +567,18 @@ class Agent(object):
       else:
         self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
         self.debugMsg("*> Walking random (%d,%d)" % self.goal)
+    if self.goal is not None:
+      return self.getActionTripple(shoot)
+    else:
+      return (0,0,shoot)
 
   def action_normal(self):
     """ This function is called every step and should
         return a tuple in the form: (turn, speed, shoot)
     """
     obs = self.observation
+    shoot = False
     
-    
-    if SETTINGS_DEAD_CANT_THINK and obs.respawn_in > -1:
-      self.debugMsg("Sleeping")
-      return (0,0,0)
-
-    # Check if agent reached goal.
-    if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
-      self.goal = None
-
-    # If agent already has a goal
-    # check if the motivation is still accurate
-    if self.goal is not None:
-      self.validateMotivation()
-
-    if self.goal is not None:
-      self.debugMsg("*> Go to: (%d,%d)" % (self.goal[0], self.goal[1]))
-    
-    # Drive to where the user clicked
-    if self.selected and self.observation.clicked:
-      self.motivation = MOTIVATION_USER_CLICK
-      self.goal = self.observation.clicked
-      
     ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     if ammopacks:
       self.updateAllAmmoSpots(ammopacks)
@@ -650,6 +616,11 @@ class Agent(object):
       if self.goal is not None:
         self.motivation = MOTIVATION_GUARD_CP
         self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
+
+    if self.goal is not None:
+      return self.getActionTripple(shoot)
+    else:
+      return self.getActionTripple(shoot)
 
   # Checks if the current motivation to
   # go to the goal is still valid.
@@ -689,6 +660,27 @@ class Agent(object):
         self.goal = None
         self.motivation = None
     
+  # Return action tripple
+  # Possible to preset shoot, turn or speed
+  def getActionTripple(self,shoot=False,turn=None,speed=None):
+    obs = self.observation
+    if turn is None or speed is None:
+      # Compute path, angle and drive
+      path = find_path(obs.loc, self.goal, self.mesh, self.grid, self.settings.tilesize)
+      if path:
+        dx = path[0][0]-obs.loc[0]
+        dy = path[0][1]-obs.loc[1]
+        turn = angle_fix(math.atan2(dy, dx)-obs.angle)
+        if turn > self.settings.max_turn or turn < -self.settings.max_turn:
+            shoot = False
+        if speed is None:
+          speed = (dx**2 + dy**2)**0.5
+      else:
+        turn = 0
+        speed = 0
+        shoot = False
+    return (turn,speed,shoot)
+
   #####################
   # * Debug methods * #
   #####################
