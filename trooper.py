@@ -44,7 +44,7 @@ SETTINGS_DOMINATION_ADDS_UP = True
 ##################
 # Debug settings #
 ##################
-SETTINGS_DEBUG_ON = True
+SETTINGS_DEBUG_ON = False
 SETTINGS_DEBUG_ERROR_ONLY = False
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
@@ -225,7 +225,7 @@ class Agent(object):
 
   # Registers goal in trending spot dictionary
   def updateTrendingSpot(self):
-    if self.goal is not None:
+    if self.goal:
       if self.goal in self.__class__.trendingSpot:
         self.__class__.trendingSpot[self.goal].append(self.id)
       else:
@@ -384,12 +384,12 @@ class Agent(object):
         return (0,0,False)
 
       # Check if agent reached goal.
-      if self.goal is not None and point_dist(self.goal, obs.loc) < self.settings.tilesize:
+      if self.goal and point_dist(self.goal, obs.loc) < self.settings.tilesize:
         self.goal = None
 
       # If agent already has a goal
       # check if the motivation is still accurate
-      if self.goal is not None:
+      if self.goal:
         self.validateMotivation()
 
       # Drive to where the user clicked
@@ -448,19 +448,19 @@ class Agent(object):
       self.debugMsg("Need to recharge ammo")
       self.goal = self.getClosestLocation(ammopacks)
       # If you see a ammo pack nearby, take it
-      if self.goal is not None:
+      if self.goal:
         self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
         self.motivation = MOTIVATION_AMMO
         return self.getActionTriple()
       # Else go to a known ammo spot
-      elif self.ammoSpots is not None:
+      elif self.ammoSpots:
         # If you are already on an ammo spot, stay put.
         if obs.loc in self.ammoSpots:
           self.goal = None
           self.motivation = MOTIVATION_STAY_PUT
           return (0,0,False)
         # Else go to a nearby ammo spot
-        elif feasible_ammo_spots is not None:
+        elif feasible_ammo_spots:
           self.goal = self.getClosestLocation(feasible_ammo_spots)
           self.motivation = MOTIVATION_AMMO
           return self.getActionTriple()
@@ -504,7 +504,7 @@ class Agent(object):
     ###############################
     # 3) Move close to enemy base #
     ###############################  
-    if eb is not None:
+    if eb:
       dist_to_enemy_base = point_dist(eb, obs.loc)
       
       if dist_to_enemy_base > 3 * ENEMY_BASE_RANGE: 
@@ -576,7 +576,7 @@ class Agent(object):
       # wait on the ammo spot.
       elif self.ammoSpots and obs.ammo < SUFFICIENT_AMMO:
         feasible_ammo_spots = self.getQuietAmmoSpots()
-        if feasible_ammo_spots is not None:
+        if feasible_ammo_spots:
           self.goal = self.getClosestLocation(self.getQuietAmmoSpots())
           self.debugMsg("*> Waiting on ammospot (%d,%d)" % (self.goal[0],self.goal[1]))
           self.motivation = MOTIVATION_AMMO_SPOT
@@ -587,7 +587,7 @@ class Agent(object):
       else:
         self.goal = obs.cps[random.randint(0,len(obs.cps)-1)][0:2]
         self.debugMsg("*> Walking random (%d,%d)" % self.goal)
-    if self.goal is not None:
+    if self.goal:
       return self.getActionTriple(shoot)
     else:
       return (0,0,shoot)
@@ -603,7 +603,7 @@ class Agent(object):
     if ammopacks:
       self.updateAllAmmoSpots(ammopacks)
 
-      if self.goal is not None:
+      if self.goal:
         # Walk to ammo
         if obs.ammo < SUFFICIENT_AMMO:
           self.goal = self.getClosestLocation(ammopacks)
@@ -613,7 +613,7 @@ class Agent(object):
     # Walk to an enemy CP
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
-      if self.goal is not None:
+      if self.goal:
         self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
@@ -633,11 +633,11 @@ class Agent(object):
     # at least walk to a friendly control point
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietRestlessFriendlyCPs())
-      if self.goal is not None:
+      if self.goal:
         self.motivation = MOTIVATION_GUARD_CP
         self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
 
-    if self.goal is not None:
+    if self.goal:
       return self.getActionTriple(shoot)
     else:
       return self.getActionTriple(shoot)
@@ -667,7 +667,7 @@ class Agent(object):
     elif self.motivation == MOTIVATION_ENEMY_BASE:
       if self.strategy == STRATEGY_OFFENCE:
         cfoe = self.getClosestEnemyInFireRange()
-        if cfoe is not None:
+        if cfoe:
           self.goal = None
           self.motivation = None
     elif self.motivation == MOTIVATION_AMMO_SPOT:
@@ -746,7 +746,7 @@ class Agent(object):
   
     # Selected agents draw their info
     if self.selected:
-      if self.goal is not None:
+      if self.goal:
         pygame.draw.line(surface,(0,0,0),self.observation.loc, self.goal)
       if SETTINGS_DEBUG_ON:
         if SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS:
@@ -764,7 +764,7 @@ class Agent(object):
     for o in self.observation.foes:
       pygame.draw.line(surface, (127,127,127), self.observation.loc, o[0:2])
     cfoe = self.getClosestEnemyInFireRange()
-    if cfoe is not None:
+    if cfoe:
       pygame.draw.line(surface, (255,0,0), self.observation.loc, cfoe[0:2])
   
   def _drawVisibleObjects(self, pygame, surface):
@@ -789,7 +789,7 @@ class Agent(object):
       pygame.draw.circle(surface, (255,0,0), cp[0:2], HOTSPOT_RANGE,2)
 
   def _drawBases(self, pygame, surface):
-    if self.__class__.home_base is not None:
+    if self.__class__.home_base:
       font = pygame.font.Font(pygame.font.get_default_font(), 10)
       txt = font.render("@", False, (255,255,255))
       surface.blit(txt, self.__class__.home_base)
@@ -811,7 +811,7 @@ class Agent(object):
       surface.blit(txt_id, (x+10,y-10))
     if SETTINGS_DEBUG_SHOW_MOTIVATION:
       # Draw motivation
-      if self.motivation is not None:
+      if self.motivation:
         txt_mot = font.render("%s" % (self.motivation,), True, (0,0,255))
         surface.blit(txt_mot, (x+10,y+5))
     if SETTINGS_DEBUG_SHOW_AMMO:
@@ -847,7 +847,7 @@ class Agent(object):
   self.selected=observation.selected
  def action(self):
   obs=self.observation
-  if self.goal is not None and point_dist(self.goal,obs.loc)<self.settings.tilesize:
+  if self.goal and point_dist(self.goal,obs.loc)<self.settings.tilesize:
    self.goal=None
   ammopacks=filter(lambda x:x[2]=="Ammo",obs.objects)
   if ammopacks:
@@ -877,7 +877,7 @@ class Agent(object):
   if self.id==0:
    surface.fill((0,0,0,0))
   if self.selected:
-   if self.goal is not None:
+   if self.goal:
     pygame.draw.line(surface,(0,0,0),self.observation.loc,self.goal)
  def finalize(self,interrupted=False):
   pass
