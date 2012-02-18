@@ -414,7 +414,10 @@ class Agent(object):
     self.updateTrendingSpot()
 
     if action is None:
-      return (0,0,False)
+      if self.goal == obs.loc:
+        return (0,0,False)
+      else:
+        return self.getActionTripple()
     else:
       return action
   
