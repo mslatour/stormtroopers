@@ -1,0 +1,2 @@
+agent 1,2,3: defence
+agent 0,4,5: normal
