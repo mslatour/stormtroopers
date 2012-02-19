@@ -448,9 +448,9 @@ class Agent(object):
     ######################
     #  STRATEGY OFFENCE  #
     ######################################
-    # 1) Make sure you have ammo         #
-    # 2) Move close to enemy base        #
-    # 3) Shoot live enemies              #
+    # 1) Shoot live enemies              #
+    # 2) Make sure you have ammo         #
+    # 3) Move close to enemy base        #
     # 4) Go to nearby ammo spot          #
     # 5) Wait for enemies to come alive  #
     ######################################
@@ -459,11 +459,43 @@ class Agent(object):
     ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     self.debugMsg("Offence strategy")
     
+    # Attack strategy 1
+    #########################
+    # 1) Shoot live enemies #
+    #########################
+    # Aim at the closest enemy outside the enemy base
+    if obs.ammo > 0 and obs.foes:
+      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
+      self.debugMsg("Living: %s" % (living,))
+      if living:
+        self.debugMsg(1)
+        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        self.debugMsg(2)
+        # Check if enemy in fire range
+        if (
+          point_dist(self.goal, obs.loc) < self.settings.max_range and
+          not line_intersects_grid(
+            obs.loc, 
+            self.goal, 
+            self.grid, 
+            self.settings.tilesize
+          )
+        ):
+          self.debugMsg(3)
+          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
+          return self.getActionTriple(True)
+        else:
+          self.debugMsg(4)
+          return self.getActionTriple()
+    self.debugMsg(5)
+    
     
     #ONLY GO TO AMMO PACKS THAT ARE NOT BEGIN VISITED BY TEAM
     feasible_ammo_spots = self.getQuietAmmoSpots()
     ##############################
-    # 1) Make sure you have ammo #
+    # 2) Make sure you have ammo #
     ##############################
     if obs.ammo < SUFFICIENT_AMMO:
       self.debugMsg("Need to recharge ammo")
@@ -490,37 +522,6 @@ class Agent(object):
         self.debugMsg("*> Walking random (%d,%d)" % self.goal)
         return self.getActionTriple()
     
-    # Attack strategy 1
-    #########################
-    # 2) Shoot live enemies #
-    #########################
-    # Aim at the closest enemy outside the enemy base
-    if obs.foes:
-      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
-      self.debugMsg("Living: %s" % (living,))
-      if living:
-        self.debugMsg(1)
-        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-        self.motivation = MOTIVATION_SHOOT_TARGET
-        self.debugMsg(2)
-        # Check if enemy in fire range
-        if (
-          point_dist(self.goal, obs.loc) < self.settings.max_range and
-          not line_intersects_grid(
-            obs.loc, 
-            self.goal, 
-            self.grid, 
-            self.settings.tilesize
-          )
-        ):
-          self.debugMsg(3)
-          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
-          return self.getActionTriple(True)
-        else:
-          self.debugMsg(4)
-          return self.getActionTriple()
-    self.debugMsg(5)
     
     ###############################
     # 3) Move close to enemy base #
