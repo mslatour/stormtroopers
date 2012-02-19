@@ -45,7 +45,7 @@ SETTINGS_DOMINATION_ADDS_UP = True
 ##################
 # Debug settings #
 ##################
-SETTINGS_DEBUG_ON = False
+SETTINGS_DEBUG_ON = True
 SETTINGS_DEBUG_ERROR_ONLY = False
 SETTINGS_DEBUG_SHOW_VISIBLE_OBJECTS = True
 SETTINGS_DEBUG_SHOW_VISIBLE_FOES = True
@@ -566,12 +566,12 @@ class Agent(object):
     # If enemies are in sight and there is 
     # enough ammo, go towards the enemy.
     if (obs.ammo > 0 and obs.foes):
+      # If the enemy is within range, shoot.
       self.goal = self.getClosestLocation(obs.foes)
       self.debugMsg("*> Go to enemy (%d,%d)" % self.goal)
-      self.motivation = MOTIVATION_SHOOT_TARGET
-      # If the enemy is within range, shoot.
       if(point_dist(self.goal, obs.loc) < self.settings.max_range
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
+        self.motivation = MOTIVATION_SHOOT_TARGET
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
         shoot = True
     
@@ -579,20 +579,13 @@ class Agent(object):
     if self.goal is None:
       # If there is enough ammo and there are friendly CPs
       if obs.ammo >= SUFFICIENT_AMMO and len(self.__class__.friendlyCPs) >= 1:
-        # Find the closest control point
-        self.goal = self.getClosestLocation(self.__class__.friendlyCPs)
-        # If the closest control point has a low domination value
-        if self.getDominationValue(self.goal) < 0.7:
-          # Guard it
-          self.motivation = MOTIVATION_GUARD_CP
-        else:
-          # Else guard the control point with the lowest
-          # domination value
-          self.goal = min(
-            self.__class__.friendlyCPs,
-            key=lambda x: self.getDominationValue(x),
-          )
-          self.motivation = MOTIVATION_GUARD_CP
+        # Guard the control point with the lowest
+        # domination value
+        self.goal = min(
+          self.__class__.friendlyCPs,
+          key=lambda x: self.getDominationValue(x),
+        )
+        self.motivation = MOTIVATION_GUARD_CP
       # If there is not enough ammo and there are known ammo spots,
       # wait on the ammo spot.
       elif self.ammoSpots and obs.ammo < SUFFICIENT_AMMO:
@@ -717,7 +710,7 @@ class Agent(object):
         turn = angle_fix(math.atan2(dy, dx)-obs.angle)
         if turn > self.settings.max_turn or turn < -self.settings.max_turn:
           shoot = False
-          speed *= 0.5
+          speed *= 0.25
 
       else:
         turn = 0
