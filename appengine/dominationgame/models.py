@@ -32,7 +32,7 @@ import trueskill
 
 
 ### Constants ###
-APP_URL = "http://localhost:8082"
+APP_URL = "http://aamasgame.appspot.com"
 MAX_ACTIVE_BRAINS = 3
 
 ### Exceptions ###
@@ -98,7 +98,7 @@ class Group(db.Model):
         return sorted(q, key=lambda b: b.conservative, reverse=True)
         
     def ladder_teams(self):
-        return self.team_set
+        return sorted(self.team_set, key=lambda x:x.maxscore, reverse=True)
         
     def recent_games(self):
         return self.game_set.order('-added').fetch(10)
@@ -178,6 +178,9 @@ class Team(db.Model):
     def url(self):
         return reverse("dominationgame.views.team", args=[self.group.slug, self.key().id()])
         
+    def anchor(self):
+        return mark_safe('<a href="%s">%s</a>' % (self.url(), str(self)))
+        
     def recent_upload_count(self):
         """ How many brains were uploaded in the last 7 days. """
         recent = datetime.now() - timedelta(days=7)
@@ -208,6 +211,32 @@ class Account(db.Model):
     current_user = None
     current_team = None
     
+class BrainData(db.Model):
+    """ Stores reference to binary data blob for an
+        agent brain
+    """
+    blob     = blobstore.BlobReferenceProperty(required=True)
+    filename = db.StringProperty()
+    added    = db.DateTimeProperty(auto_now_add=True)
+    team     = db.ReferenceProperty(Team, required=True)
+    
+    @classmethod
+    def create(cls, team, datafile):
+        file_name = files.blobstore.create(mime_type='application/octet-stream')
+        with files.open(file_name, 'a') as f:
+            for chunk in datafile.chunks():
+                f.write(chunk)
+        files.finalize(file_name)
+        blob_key = files.blobstore.get_blob_key(file_name)
+        braindata = cls(blob=blobstore.BlobInfo.get(blob_key),
+                        team=team,
+                        filename=datafile.name,
+                        parent=team.group)
+        braindata.put()
+        
+    def download_url(self):
+        return reverse("dominationgame.views.download_data", args=[self.parent().slug, self.key().id()])
+            
 class Brain(db.Model):
     # Performance stats
     score        = db.FloatProperty(default=100.0)
@@ -226,6 +255,7 @@ class Brain(db.Model):
     last_played = db.DateTimeProperty()
     # Source code
     source       = db.TextProperty(required=True)
+    data         = db.ReferenceProperty(BrainData)    
     
     def __str__(self):
         return mark_safe("%s v%d"%(self.name, self.version))
@@ -260,6 +290,37 @@ class Brain(db.Model):
         
     def url(self):
         return reverse("dominationgame.views.brain", args=[self.group.slug, self.key().id()])
+        
+    def download_url(self):
+        return reverse("dominationgame.views.brain_download", args=[self.group.slug, self.key().id()])
+        
+    def blob_anchor(self):
+        if self.data and self.data.blob:
+            return mark_safe('<a href="%s?fn=%s_blob">Blob</a>'% (self.data.download_url(), self.identifier()))
+        else:
+            return mark_safe("<span>No Blob</span>")
+        
+    def anchor(self):
+        return mark_safe('<a href="%s">%s</a>' % (self.url(), str(self)))
+        
+    def games(self):
+        """ Returns list of games this brain played """
+        rgames = [{'my_score': g.score_red,
+                   'opp_score': g.score_blue,
+                   'opponent': g.blue,
+                   'game': g} for g in self.red_set ]
+        bgames = [{'my_score': g.score_blue,
+                   'opp_score': g.score_red,
+                   'opponent': g.red,
+                   'game': g} for g in self.blue_set]
+        return sorted(rgames + bgames, key=lambda g: g['game'].added, reverse=True)
+
+        
+    def data_reader(self):
+        """ Returns a reader into this brains data or None """
+        if self.data is not None:
+            return self.data.blob.open()
+        return None
                 
     def release_date(self):
         return self.added + self.group.release_delay
@@ -268,8 +329,9 @@ class Brain(db.Model):
         return self.release_date() < datetime.now()
         
     def owned_by_current_user(self):
-        return Account.current_user.team == self.team
+        return Account.current_user and (Account.current_user.team == self.team)
         
+
         
 class Game(db.Model):
     added           = db.DateTimeProperty(auto_now_add=True)
@@ -299,8 +361,18 @@ class Game(db.Model):
         # Run a game
         settings = group.gamesettings_obj()
         logging.info("Running game: %s %s vs %s %s with %s"%(red.team, red, blue.team, blue, settings))
+        if red.data is not None:
+            red_init = {'blob':red.data_reader()}
+        else:
+            red_init = {}
+        if blue.data is not None:
+            blue_init = {'blob':blue.data_reader()}
+        else:
+            blue_init = {}
         dg = domcore.Game(red_brain_string=red.source,
                           blue_brain_string=blue.source,
+                          red_init=red_init,
+                          blue_init=blue_init,
                           settings=settings,
                           verbose=False, rendered=False, record=True)
         dg.run()

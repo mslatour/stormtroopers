@@ -14,7 +14,7 @@ that contains these 5 methods::
 
         NAME = "my_agent" # Replay filenames and console output will contain this name.
     
-        def __init__(self, id, team, settings=None, field_rects=None, field_grid=None, nav_mesh=None):
+        def __init__(self, id, team, settings=None, field_rects=None, field_grid=None, nav_mesh=None, **kwargs):
             pass
         
         def observe(self, observation):
@@ -40,7 +40,7 @@ This method will be called for each agent at the beginning of each game.
 
 .. automethod:: domination.agent.Agent.__init__
 
-The `settings` object is an instance of :class:`~core.Settings`, and contains all the game 
+The `settings` object is an instance of :class:`~domination.core.Settings`, and contains all the game 
 settings such as game length and maximum score. The ``field_rects``, ``field_grid``, 
 and ``nav_mesh`` arguments provide some information about the map that the game 
 will be played on. The first contains a list of walls on the map as ``(x,y,width,height)``
@@ -49,7 +49,7 @@ tuples, the second contains the same information, but as a 2D binary array inste
 Navigation Mesh
 ^^^^^^^^^^^^^^^
 
-Also passed to the agent constructor is a 'navigation mesh'. This is a directed graph containing **the set of points from which all points on the map can be seen**, and the straight lines connecting them.
+Also passed to the agent constructor is a 'navigation mesh'. This is a directed graph containing **the set of points from which all points on the map can be seen**, and the straight lines connecting them. You can use it in conjunction with :meth:`~domination.utilities.find_path` to plan paths.
 
 .. image:: ims/navmesh.png
 
@@ -156,6 +156,7 @@ pickled file, you can simply read it with::
         if blob is not None:
             my_data = pickle.reads(blob.read())
             blob.seek(0) #: Reset the filepointer for the next agent.
+                         #  if you omit this, the next agent will raise an EOFError
             
 Of course, the way you store your data in this file is up to you, you can store it in any format, and even 
 read it line-by-line if you want.

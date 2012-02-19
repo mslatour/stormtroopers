@@ -1,7 +1,0 @@
-red,blue,score,score_red,score_blue,steps,ammo_red,ammo_blue
-_tmp/agenta.py,_tmp/agentc.py,0.696,696,304,600,74,70
-_tmp/agenta.py,_tmp/agentb.py,1.0,1000,0,274,42,19
-_tmp/agentc.py,_tmp/agentb.py,1.0,1000,0,419,59,37
-_tmp/agenta.py,_tmp/agentc.py,0.0,0,1000,444,51,55
-_tmp/agenta.py,_tmp/agentb.py,0.983,983,17,600,78,65
-_tmp/agentc.py,_tmp/agentb.py,0.886,886,114,600,62,80
