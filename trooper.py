@@ -12,6 +12,8 @@ import time
 CROWDED_HOTSPOT = 3
 # Range in pixels that still counts as the same hotspot.
 HOTSPOT_RANGE = 20
+# Range in pixels that makes agents decide to make a detour
+TOO_CLOSE_TO_MISS_RANGE = 30
 # The number of turns before a control point is considered peaceful.
 DOMINATION_THRESHOLD = 5
 # Number of ammo that counts as enough.
@@ -703,9 +705,14 @@ class Agent(object):
     self.debugMsg(5)
           
     # Walk to an enemy CP
-    if self.goal is None and len(self.friendlyCPs) < 2:
-      self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
-      if self.goal:
+    if self.goal is None:
+      closestEnemyCP = self.getClosestLocation(self.getQuietEnemyCPs())
+      if( 
+        closestEnemyCP 
+        and len(self.friendlyCPs) < 2
+        or point_dist(obs.loc, closestEnemyCP) < TOO_CLOSE_TO_MISS_RANGE
+      ):
+        self.goal = closestEnemyCP
         self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
