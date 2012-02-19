@@ -17,7 +17,7 @@ DOMINATION_THRESHOLD = 5
 # Number of ammo that counts as enough.
 SUFFICIENT_AMMO = 2
 # Range around enemy base
-ENEMY_BASE_RANGE = 30
+ENEMY_BASE_RANGE = 40
 # Range for getting ammo near enemy base
 FIND_AMMO_RANGE = 100
 
@@ -389,6 +389,32 @@ class Agent(object):
       return locations[min_i][0:2]
     else:
       return None
+    
+  def shoot_enemy(self, obs, eb):
+    living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
+    self.debugMsg("Living: %s" % (living,))
+    if living:
+      self.debugMsg(1)
+      self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
+      self.motivation = MOTIVATION_SHOOT_TARGET
+      self.debugMsg(2)
+      # Check if enemy in fire range
+      if (
+        point_dist(self.goal, obs.loc) < self.settings.max_range and
+        not line_intersects_grid(
+          obs.loc, 
+          self.goal, 
+          self.grid, 
+          self.settings.tilesize
+        )
+      ):
+        self.debugMsg(3)
+        self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+        #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
+        return True
+      else:
+        self.debugMsg(4)
+        return False
 
   #####################################
   # *  Action and strategy methods  * #
@@ -466,31 +492,11 @@ class Agent(object):
     #########################
     # Aim at the closest enemy outside the enemy base
     if obs.ammo > 0 and obs.foes:
-      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
-      self.debugMsg("Living: %s" % (living,))
-      if living:
-        self.debugMsg(1)
-        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-        self.motivation = MOTIVATION_SHOOT_TARGET
-        self.debugMsg(2)
-        # Check if enemy in fire range
-        if (
-          point_dist(self.goal, obs.loc) < self.settings.max_range and
-          not line_intersects_grid(
-            obs.loc, 
-            self.goal, 
-            self.grid, 
-            self.settings.tilesize
-          )
-        ):
-          self.debugMsg(3)
-          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
-          return self.getActionTriple(True)
-        else:
-          self.debugMsg(4)
-          return self.getActionTriple()
-    self.debugMsg(5)
+      shoot = self.shoot_enemy(obs, eb)
+      if shoot:
+        return self.getActionTriple(True)
+      else:
+        return self.getActionTriple()
     
     
     #ONLY GO TO AMMO PACKS THAT ARE NOT BEGIN VISITED BY TEAM
@@ -573,30 +579,11 @@ class Agent(object):
     #########################
     # Aim at the closest enemy outside the enemy base
     if obs.ammo > 0 and obs.foes:
-      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
-      self.debugMsg("Living: %s" % (living,))
-      if living:
-        self.debugMsg(1)
-        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-        self.motivation = MOTIVATION_SHOOT_TARGET
-        self.debugMsg(2)
-        # Check if enemy in fire range
-        if (
-          point_dist(self.goal, obs.loc) < self.settings.max_range and
-          not line_intersects_grid(
-            obs.loc, 
-            self.goal, 
-            self.grid, 
-            self.settings.tilesize
-          )
-        ):
-          self.debugMsg(3)
-          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
-          return self.getActionTriple(True)
-        else:
-          self.debugMsg(4)
-          return self.getActionTriple()
+      shoot = self.shoot_enemy(obs, eb)
+      if shoot:
+        return self.getActionTriple(True)
+      else:
+        return self.getActionTriple()
           
     '''
     # If enemies are in sight and there is 
@@ -676,31 +663,11 @@ class Agent(object):
     #########################
     # Aim at the closest enemy outside the enemy base
     if obs.ammo > 0 and obs.foes:
-      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
-      self.debugMsg("Living: %s" % (living,))
-      if living:
-        self.debugMsg(1)
-        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
-        self.motivation = MOTIVATION_SHOOT_TARGET
-        self.debugMsg(2)
-        # Check if enemy in fire range
-        if (
-          point_dist(self.goal, obs.loc) < self.settings.max_range and
-          not line_intersects_grid(
-            obs.loc, 
-            self.goal, 
-            self.grid, 
-            self.settings.tilesize
-          )
-        ):
-          self.debugMsg(3)
-          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
-          return self.getActionTriple(True)
-        else:
-          self.debugMsg(4)
-          return self.getActionTriple()
-    self.debugMsg(5)
+      shoot = self.shoot_enemy(obs, eb)
+      if shoot:
+        return self.getActionTriple(True)
+      else:
+        return self.getActionTriple()
           
     # Walk to an enemy CP
     if self.goal is None and len(self.friendlyCPs) < 2:
