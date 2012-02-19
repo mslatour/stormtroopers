@@ -112,6 +112,7 @@ class Agent(object):
 
   # Ammo locations
   ammoSpots = []
+  
 
   ##################
   # Initialization #
@@ -556,6 +557,8 @@ class Agent(object):
   def action_defend(self):
     obs = self.observation
     shoot = False
+    eb = self.__class__.enemy_base
+
 
     # If there isn't sufficient ammo
     # and there is ammo around
@@ -563,7 +566,39 @@ class Agent(object):
     if ammopacks and obs.ammo < SUFFICIENT_AMMO:
         self.goal = self.getClosestLocation(ammopacks)
         self.motivation = MOTIVATION_AMMO
-    
+        
+    # Attack strategy 1
+    #########################
+    # 1) Shoot live enemies #
+    #########################
+    # Aim at the closest enemy outside the enemy base
+    if obs.ammo > 0 and obs.foes:
+      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
+      self.debugMsg("Living: %s" % (living,))
+      if living:
+        self.debugMsg(1)
+        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        self.debugMsg(2)
+        # Check if enemy in fire range
+        if (
+          point_dist(self.goal, obs.loc) < self.settings.max_range and
+          not line_intersects_grid(
+            obs.loc, 
+            self.goal, 
+            self.grid, 
+            self.settings.tilesize
+          )
+        ):
+          self.debugMsg(3)
+          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
+          return self.getActionTriple(True)
+        else:
+          self.debugMsg(4)
+          return self.getActionTriple()
+          
+    '''
     # If enemies are in sight and there is 
     # enough ammo, go towards the enemy.
     if (obs.ammo > 0 and obs.foes):
@@ -574,12 +609,12 @@ class Agent(object):
         and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
         self.motivation = MOTIVATION_SHOOT_TARGET
         self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        shoot = True
+        shoot = True'''
     
     # If no goal was set.
     if self.goal is None:
       # If there is enough ammo and there are friendly CPs
-      if obs.ammo >= SUFFICIENT_AMMO and len(self.__class__.friendlyCPs) >= 1:
+      if obs.ammo >= SUFFICIENT_AMMO and len(self.__class__.friendlyCPs) > 1:
         # Guard the control point with the lowest
         # domination value
         self.goal = min(
@@ -613,44 +648,84 @@ class Agent(object):
     """
     obs = self.observation
     shoot = False
+    eb = self.__class__.enemy_base
     
     ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     if ammopacks:
       self.updateAllAmmoSpots(ammopacks)
-
-      if self.goal:
-        # Walk to ammo
-        if obs.ammo < SUFFICIENT_AMMO:
-          self.goal = self.getClosestLocation(ammopacks)
-          self.motivation = MOTIVATION_AMMO
-          self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
-   
+      # Walk to ammo
+      if obs.ammo < SUFFICIENT_AMMO:
+        self.goal = self.getClosestLocation(ammopacks)
+        self.motivation = MOTIVATION_AMMO
+        self.debugMsg("*> Recharge (%d,%d)" % (self.goal[0],self.goal[1]))
+          
+    '''if (obs.ammo > 0 and obs.foes):
+      self.goal = self.getClosestLocation(obs.foes)
+      self.debugMsg("*> Go to enemy (%d,%d)" % self.goal)
+      # If the enemy is within range, shoot.
+      if(point_dist(self.goal, obs.loc) < self.settings.max_range
+        and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
+        self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+        #if self.goal not in obs.friends:
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        shoot = True'''
+        
+    # Attack strategy 1
+    #########################
+    # 1) Shoot live enemies #
+    #########################
+    # Aim at the closest enemy outside the enemy base
+    if obs.ammo > 0 and obs.foes:
+      living = filter(lambda x: point_dist(x[0:2], eb) > ENEMY_BASE_RANGE, obs.foes)
+      self.debugMsg("Living: %s" % (living,))
+      if living:
+        self.debugMsg(1)
+        self.goal = min(living, key=lambda x: point_dist(obs.loc, x[0:2]))[0:2]
+        self.motivation = MOTIVATION_SHOOT_TARGET
+        self.debugMsg(2)
+        # Check if enemy in fire range
+        if (
+          point_dist(self.goal, obs.loc) < self.settings.max_range and
+          not line_intersects_grid(
+            obs.loc, 
+            self.goal, 
+            self.grid, 
+            self.settings.tilesize
+          )
+        ):
+          self.debugMsg(3)
+          self.debugMsg("*> Shoot (%d,%d)" % self.goal)
+          #return self.getActionTriple(True,None,0) ###?? SHOULD WE STOP MOVING WHEN WE SHOOT?
+          return self.getActionTriple(True)
+        else:
+          self.debugMsg(4)
+          return self.getActionTriple()
+    self.debugMsg(5)
+          
     # Walk to an enemy CP
-    if self.goal is None:
+    if self.goal is None and len(self.friendlyCPs) < 2:
       self.goal = self.getClosestLocation(self.getQuietEnemyCPs())
       if self.goal:
         self.debugMsg("Crowded location: %d" % self.getCrowdedValue(self.goal))
         self.motivation = MOTIVATION_CAPTURE_CP
         self.debugMsg("*> Capture (%d,%d)" % (self.goal[0],self.goal[1]))
     
-    if (obs.ammo > 0 and obs.foes):
-      self.goal = self.getClosestLocation(obs.foes)
-      self.debugMsg("*> Go to enemy (%d,%d)" % self.goal)
-      self.motivation = MOTIVATION_SHOOT_TARGET
-      # If the enemy is within range, shoot.
-      if(point_dist(self.goal, obs.loc) < self.settings.max_range
-        and not line_intersects_grid(obs.loc, self.goal, self.grid, self.settings.tilesize)):
-        self.debugMsg("*> Shoot (%d,%d)" % self.goal)
-        if self.goal not in obs.friends:
-          self.shoot = True
-
-    # If you can't think of anything to do
+    '''# If you can't think of anything to do
     # at least walk to a friendly control point
     if self.goal is None:
       self.goal = self.getClosestLocation(self.getQuietRestlessFriendlyCPs())
       if self.goal:
         self.motivation = MOTIVATION_GUARD_CP
-        self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))
+        self.debugMsg("*> Guard (%d,%d)" % (self.goal[0],self.goal[1]))'''
+        
+    if self.goal is None:
+      self.goal = max(
+          self.__class__.ammoSpots,
+          key=lambda x: point_dist(x, obs.loc),
+        )
+      self.debugMsg("Going to ammospot far away (%d, %d)" % (self.goal[0],self.goal[1]))
+      self.motivation = MOTIVATION_STAY_PUT
+      
 
     if self.goal:
       return self.getActionTriple(shoot)
@@ -662,8 +737,11 @@ class Agent(object):
   # If not, it clears the goal and motivation
   def validateMotivation(self):
     obs = self.observation
+    ammopacks = filter(lambda x: x[2] == "Ammo", obs.objects)
     self.debugMsg("[MOT: %s]" % (self.motivation,))
-    if self.motivation == MOTIVATION_CAPTURE_CP:
+    if obs.foes or ammopacks:
+      self.goal = None
+    elif self.motivation == MOTIVATION_CAPTURE_CP:
       # If the CP to be captures is already friendly, stop.
       if (
           self.goal in self.__class__.friendlyCPs or
@@ -672,7 +750,7 @@ class Agent(object):
         self.goal = None
         self.motivation = None
     elif self.motivation == MOTIVATION_GUARD_CP:
-      if len(self.__class__.enemyCPs) > 0:
+      if len(self.__class__.enemyCPs) > 1:
         self.goal = None
         self.motivation = None
     elif self.motivation == MOTIVATION_AMMO:
@@ -693,7 +771,7 @@ class Agent(object):
       if self.goal not in map(lambda x: x[0:2], obs.foes):
         self.goal = None
         self.motivation = None
-    
+      
   # Return action triple
   # Possible to preset shoot, turn or speed
   def getActionTriple(self,shoot=False,turn=None,speed=None):
