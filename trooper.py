@@ -15,7 +15,7 @@ HOTSPOT_RANGE = 20
 # The number of turns before a control point is considered peaceful.
 DOMINATION_THRESHOLD = 5
 # Number of ammo that counts as enough.
-SUFFICIENT_AMMO = 3
+SUFFICIENT_AMMO = 2
 # Range around enemy base
 ENEMY_BASE_RANGE = 30
 # Range for getting ammo near enemy base
@@ -34,6 +34,7 @@ DEFAULT_FIELD_HEIGHT = 26   # in case not provided in settings
 #####################
 # Agents who died don't think about their destinations
 SETTINGS_DEAD_CANT_THINK = True
+SETTINGS_DONT_HARM_FRIENDS = True
 
 ####################
 # Feature settings #
@@ -153,12 +154,6 @@ class Agent(object):
         self.__class__.field_width = len(field_grid[0])*tilesize
         self.__class__.field_height = len(field_grid)*tilesize
 
-      if SETTINGS_DEBUG_ON:
-        self.debugMsg(
-          "Field: %d x %d"
-        % 
-          (self.__class__.field_width, self.__class__.field_height)
-        )
     self.all_agents.append(self)
   
   ############################
@@ -178,7 +173,7 @@ class Agent(object):
     #############################
     # Update of turn statistics #
     #############################
-    if self.id == 0:
+    if self.id == (obs.step % 6):
       # Store base locations
       if self.__class__.home_base is None:
         self.__class__.home_base = (obs.loc[0]+16, obs.loc[1]+8)
@@ -349,6 +344,34 @@ class Agent(object):
       self.getDominationValue(x[0:2]) < DOMINATION_THRESHOLD and
       self.getCrowdedValue(x[0:2]) < CROWDED_HOTSPOT), self.observation.cps)
 
+  # Returns if the line from self.loc to goal
+  # intersects one of the friends.
+  #
+  # Maybe not working correctly in the current
+  # coordinate system, possibly needs correction
+  # using tilesize
+  def isFriendInWay(self, goal):
+    if goal is None:
+      return False
+    start = self.observation.loc
+    friends = map(lambda x:x[0:2], self.observation.friends)
+    dx = goal[0]-start[0]
+    dy = goal[1]-start[1]
+    if abs(dx) > abs(dy):
+      ddy = dy/float(abs(dx))
+      ddx = dx/abs(dx)
+      steps = range(1, abs(dx))
+    else:
+      ddx = dx/float(abs(dy))
+      ddy = dy/abs(dy)
+      steps = range(1, abs(dy))
+    for step in steps:
+      nx = start[0]+(step*ddx)
+      ny = start[1]+(step*ddy)
+      if (nx,ny) in friends:
+        return True
+    return False
+
   def getClosestLocation(self, locations):
     """ Returns the closest location from the set
         in terms of point distance to the current location
@@ -374,7 +397,6 @@ class Agent(object):
     """ This function is called every step and should
         return a tuple in the form: (turn, speed, shoot)
     """
-    
     obs = self.observation
 
     action = None
@@ -414,7 +436,6 @@ class Agent(object):
       self.goal = obs.loc
 
     self.updateTrendingSpot()
-
     if action is None:
       if self.goal == obs.loc:
         return (0,0,False)
@@ -689,15 +710,25 @@ class Agent(object):
       if path:
         dx = path[0][0]-obs.loc[0]
         dy = path[0][1]-obs.loc[1]
-        turn = angle_fix(math.atan2(dy, dx)-obs.angle)
-        if turn > self.settings.max_turn or turn < -self.settings.max_turn:
-            shoot = False
+        
         if speed is None:
           speed = (dx**2 + dy**2)**0.5
+
+        turn = angle_fix(math.atan2(dy, dx)-obs.angle)
+        if turn > self.settings.max_turn or turn < -self.settings.max_turn:
+          shoot = False
+          speed *= 0.5
+
       else:
         turn = 0
         speed = 0
         shoot = False
+
+    # Don't shoot if a friend is in the way
+    if shoot == True and SETTINGS_DONT_HARM_FRIENDS:
+      if self.isFriendInWay(self.goal):
+        shoot = False
+
     return (turn,speed,shoot)
 
   #####################
