@@ -1,0 +1,5 @@
+red_file,blue_file,score,score_red,score_blue,steps,ammo_red,ammo_blue
+trooper.py,domination/agent.py,0.195,195,805,600,34,10
+trooper.py,domination/agent.py,0.433,433,567,270,17,3
+trooper.py,domination/agent.py,0.5,500,500,6,1,1
+trooper.py,domination/agent.py,0.508,508,492,17,1,1
