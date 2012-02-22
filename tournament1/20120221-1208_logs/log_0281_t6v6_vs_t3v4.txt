@@ -1,0 +1,59 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `warmain (t3v4.py)`
+Initializing agents.
+Step 10: 499 - 501
+[Game]: Agent BLU-0 timed out (0.226s).
+Step 20: 507 - 493
+Step 30: 521 - 479
+Step 40: 517 - 483
+Step 50: 493 - 507
+Step 60: 499 - 501
+Step 70: 529 - 471
+Step 80: 559 - 441
+Step 90: 589 - 411
+Step 100: 619 - 381
+Step 110: 644 - 356
+Step 120: 650 - 350
+Step 130: 666 - 334
+Step 140: 694 - 306
+Step 150: 704 - 296
+Step 160: 711 - 289
+Step 170: 709 - 291
+Step 180: 696 - 304
+Step 190: 696 - 304
+Step 200: 726 - 274
+Step 210: 728 - 272
+Step 220: 728 - 272
+Step 230: 758 - 242
+Step 240: 766 - 234
+Step 250: 760 - 240
+Step 260: 784 - 216
+Step 270: 814 - 186
+Step 280: 834 - 166
+Step 290: 826 - 174
+Step 300: 802 - 198
+Step 310: 774 - 226
+Step 320: 788 - 212
+Step 330: 796 - 204
+Step 340: 792 - 208
+Step 350: 822 - 178
+Step 360: 852 - 148
+Step 370: 858 - 142
+Step 380: 846 - 154
+Step 390: 838 - 162
+Step 400: 862 - 138
+Step 410: 892 - 108
+Step 420: 903 - 97
+Step 430: 923 - 77
+Step 440: 952 - 48
+Step 450: 976 - 24
+Step 460: 992 - 8
+== GAME STATS ==
+ammo_blue       : 33
+ammo_red        : 53
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 465
+think_time_blue : 4.210919999983162
+think_time_red  : 3.883111000005556

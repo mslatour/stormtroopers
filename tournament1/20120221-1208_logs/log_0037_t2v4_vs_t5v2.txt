@@ -1,0 +1,912 @@
+Domination Game Ver. 1.3.0
+Playing `KR1802_agent (t2v4.py)` vs. `CEREAL_KILLERS_VERSION_2 (t5v2.py)`
+Initializing agents.
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 40), (40, 24), (40, 40), (56, 24), (56, 40)]
+keys       : []
+loc        : (24, 24)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 24), (24, 40), (40, 40), (56, 24), (56, 40)]
+keys       : []
+loc        : (40, 24)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 24), (24, 40), (40, 24), (40, 40), (56, 40)]
+keys       : []
+loc        : (56, 24)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 24), (40, 24), (40, 40), (56, 24), (56, 40)]
+keys       : []
+loc        : (24, 40)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 24), (24, 40), (40, 24), (56, 24), (56, 40)]
+keys       : []
+loc        : (40, 40)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(24, 24), (24, 40), (40, 24), (40, 40), (56, 24)]
+keys       : []
+loc        : (56, 40)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 1
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.7791482447757492
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(57, 62), (68, 52), (70, 64), (82, 55), (82, 69)]
+keys       : []
+loc        : (52, 50)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8010218920179253
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(52, 50), (57, 62), (70, 64), (82, 55), (82, 69)]
+keys       : []
+loc        : (68, 52)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8891905038544916
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(52, 50), (57, 62), (68, 52), (70, 64), (82, 69)]
+keys       : []
+loc        : (82, 55)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.5551785761206047
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(52, 50), (68, 52), (70, 64), (82, 55), (82, 69)]
+keys       : []
+loc        : (57, 62)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.661043168850687
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(52, 50), (57, 62), (68, 52), (82, 55), (82, 69)]
+keys       : []
+loc        : (70, 64)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8368233714154241
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(52, 50), (57, 62), (68, 52), (70, 64), (82, 55)]
+keys       : []
+loc        : (82, 69)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 2
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.7853981633974483
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(87, 86), (98, 90), (99, 79), (110, 87), (110, 99)]
+keys       : []
+loc        : (80, 74)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8131687999908692
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(80, 74), (87, 86), (98, 90), (110, 87), (110, 99)]
+keys       : []
+loc        : (99, 79)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8932036812749713
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(80, 74), (87, 86), (98, 90), (99, 79), (110, 99)]
+keys       : []
+loc        : (110, 87)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.5307734972029068
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(80, 74), (98, 90), (99, 79), (110, 87), (110, 99)]
+keys       : []
+loc        : (87, 86)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.6483319890872608
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(80, 74), (87, 86), (99, 79), (110, 87), (110, 99)]
+keys       : []
+loc        : (98, 90)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8360460556775604
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(80, 74), (87, 86), (98, 90), (99, 79), (110, 87)]
+keys       : []
+loc        : (110, 99)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 3
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.804087575844354
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(104, 130), (107, 119), (110, 102), (135, 118), (137, 129)]
+keys       : []
+loc        : (108, 90)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 1.5146755440937199
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(104, 130), (108, 90), (110, 102), (135, 118), (137, 129)]
+keys       : []
+loc        : (107, 119)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.9075933340888032
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(104, 130), (107, 119), (108, 90), (110, 102), (137, 129)]
+keys       : []
+loc        : (135, 118)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.7802700032232139
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(104, 130), (107, 119), (108, 90), (135, 118), (137, 129)]
+keys       : []
+loc        : (110, 102)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 1.4940244355251187
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(107, 119), (108, 90), (110, 102), (135, 118), (137, 129)]
+keys       : []
+loc        : (104, 130)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8419416003422655
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 2), (552, 168, 2)]
+foes       : []
+friends    : [(104, 130), (107, 119), (108, 90), (110, 102), (135, 118)]
+keys       : []
+loc        : (137, 129)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 4
+walls      : [[0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.8792393760267849
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (137, 132), (159, 148), (163, 160)]
+keys       : []
+loc        : (134, 121)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 1.631944489444198
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (134, 121), (137, 132), (159, 148), (163, 160)]
+keys       : []
+loc        : (104, 158)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 1, 1, 1, 1]]
+You should explore the world and find ammo
+[Game]: Agent RED-1 raised exception:
+------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/core.py", line 1403, in get_action
+    (turn,speed,shoot) = self.brain.action()
+  File "<string>", line 132, in action
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 472, in find_path
+    if not line_intersects_grid(start, end, grid, tilesize):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 188, in line_intersects_grid
+    def line_intersects_grid((x0,y0), (x1,y1), grid, grid_cell_size=1):
+TypeError: 'NoneType' object is not iterable
+------------------------------------------------------------
+== Observation ==
+ammo       : 0
+angle      : 0.91510070055336
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (134, 121), (137, 132), (163, 160)]
+keys       : []
+loc        : (159, 148)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 1]]
+== Observation ==
+ammo       : 0
+angle      : 0.823840753418636
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (134, 121), (159, 148), (163, 160)]
+keys       : []
+loc        : (137, 132)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 1.5707963267948966
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (134, 121), (137, 132), (159, 148), (163, 160)]
+keys       : []
+loc        : (104, 169)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 1, 1, 1, 1], [1, 1, 0, 1, 1, 1, 1]]
+You should explore the world and find ammo
+[Game]: Agent RED-4 raised exception:
+------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/core.py", line 1403, in get_action
+    (turn,speed,shoot) = self.brain.action()
+  File "<string>", line 132, in action
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 472, in find_path
+    if not line_intersects_grid(start, end, grid, tilesize):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 188, in line_intersects_grid
+    def line_intersects_grid((x0,y0), (x1,y1), grid, grid_cell_size=1):
+TypeError: 'NoneType' object is not iterable
+------------------------------------------------------------
+== Observation ==
+ammo       : 0
+angle      : 0.844153986113171
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (134, 121), (137, 132), (159, 148)]
+keys       : []
+loc        : (163, 160)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 5
+walls      : [[0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 1, 1], [1, 1, 1, 0, 0, 1, 1]]
+== Observation ==
+ammo       : 0
+angle      : 0.8824375493794481
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (164, 162), (183, 176), (185, 187)]
+keys       : []
+loc        : (159, 150)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 1]]
+== Observation ==
+ammo       : 0
+angle      : 1.631944489444198
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (159, 150), (164, 162), (183, 176), (185, 187)]
+keys       : []
+loc        : (104, 158)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 1, 1, 1, 1]]
+You should explore the world and find ammo
+[Game]: Agent RED-1 raised exception:
+------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/core.py", line 1403, in get_action
+    (turn,speed,shoot) = self.brain.action()
+  File "<string>", line 132, in action
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 472, in find_path
+    if not line_intersects_grid(start, end, grid, tilesize):
+  File "/Users/Tom/School/2011-2012 Artificial Intelligence/[TA] AAMAS/Code/domination/utilities.py", line 188, in line_intersects_grid
+    def line_intersects_grid((x0,y0), (x1,y1), grid, grid_cell_size=1):
+TypeError: 'NoneType' object is not iterable
+------------------------------------------------------------
+== Observation ==
+ammo       : 0
+angle      : 0.9318823417910096
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (159, 150), (164, 162), (185, 187)]
+keys       : []
+loc        : (183, 176)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.8156919233162232
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (159, 150), (183, 176), (185, 187)]
+keys       : []
+loc        : (164, 162)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 1, 1], [1, 1, 1, 0, 0, 1, 1]]
+== Observation ==
+ammo       : 0
+angle      : 1.5707963267948966
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (159, 150), (164, 162), (183, 176), (185, 187)]
+keys       : []
+loc        : (104, 169)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 1, 1, 1, 1], [1, 1, 0, 1, 1, 1, 1]]
+== Observation ==
+ammo       : 0
+angle      : 0.8076167287241676
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 169), (104, 158), (159, 150), (164, 162), (183, 176)]
+keys       : []
+loc        : (185, 187)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 6
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.9034901918165428
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (139, 186), (184, 189), (201, 182), (224, 185)]
+keys       : []
+loc        : (184, 177)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 1.631944489444198
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(139, 186), (184, 189), (184, 177), (201, 182)]
+keys       : []
+loc        : (104, 158)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 1, 1, 1, 1]]
+== Observation ==
+ammo       : 0
+angle      : 0.11202896242598781
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (139, 186), (184, 189), (184, 177), (224, 185)]
+keys       : []
+loc        : (201, 182)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 1, 1, 1, 1], [1, 0, 0, 1, 1, 1, 1], [1, 0, 0, 1, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.7853981633974483
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (139, 186), (184, 177), (201, 182), (224, 185)]
+keys       : []
+loc        : (184, 189)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.5235987755982991
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(104, 158), (184, 189), (184, 177), (201, 182), (224, 185)]
+keys       : []
+loc        : (139, 186)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : -0.025635408521677228
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(139, 186), (184, 189), (184, 177), (201, 182)]
+keys       : []
+loc        : (224, 185)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 7
+walls      : [[0, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.10092178466729385
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(138, 180), (179, 185), (218, 185), (241, 184), (263, 185)]
+keys       : []
+loc        : (195, 182)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 1, 1, 1, 1], [1, 0, 0, 1, 1, 1, 1], [1, 0, 0, 1, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.5847469382476005
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(179, 185), (195, 182), (218, 185), (241, 184)]
+keys       : []
+loc        : (138, 180)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0]]
+== Observation ==
+ammo       : 0
+angle      : 0.048349386651902915
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(138, 180), (179, 185), (195, 182), (218, 185), (263, 185)]
+keys       : []
+loc        : (241, 184)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : -0.05058970876938451
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(138, 180), (179, 185), (195, 182), (241, 184), (263, 185)]
+keys       : []
+loc        : (218, 185)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[0, 0, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 0]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : -0.00806434130676692
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(138, 180), (195, 182), (218, 185), (241, 184), (263, 185)]
+keys       : []
+loc        : (179, 185)
+objects    : [(280, 216, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(179, 185), (195, 182), (218, 185), (241, 184)]
+keys       : []
+loc        : (263, 185)
+objects    : [(280, 216, 'Ammo'), (296, 200, 'Ammo'), (360, 200, 'Ammo'), (376, 216, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 8
+walls      : [[1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+[(280, 216)]
+== Observation ==
+ammo       : 0
+angle      : 0.044089057398071674
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(178, 182), (219, 185), (255, 185), (267, 185), (281, 216)]
+keys       : []
+loc        : (235, 184)
+objects    : [(296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 9
+walls      : [[0, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0, 0]]
+[(280, 216), (296, 200)]
+== Observation ==
+ammo       : 0
+angle      : 0.03997868712328989
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(219, 185), (235, 184), (255, 185), (267, 185), (281, 216)]
+keys       : []
+loc        : (178, 182)
+objects    : []
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 9
+walls      : [[0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 1, 0, 0, 1, 1, 1]]
+== Observation ==
+ammo       : 0
+angle      : 0.04542327942157698
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : [(376, 216, 2.0724003809840177)]
+friends    : [(178, 182), (219, 185), (235, 184), (255, 185), (281, 216)]
+keys       : []
+loc        : (267, 185)
+objects    : [(296, 200, 'Ammo'), (360, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 9
+walls      : [[1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0]]
+[(280, 216), (296, 200)]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : True
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(178, 182), (219, 185), (235, 184), (267, 185), (281, 216)]
+keys       : []
+loc        : (255, 185)
+objects    : [(296, 200, 'Ammo'), (360, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 9
+walls      : [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0]]
+[(280, 216), (296, 200)]
+== Observation ==
+ammo       : 0
+angle      : 0.0
+clicked    : None
+collided   : False
+cps        : [(328, 120, 2), (104, 168, 0), (552, 168, 1)]
+foes       : []
+friends    : [(178, 182), (235, 184), (255, 185), (267, 185), (281, 216)]
+keys       : []
+loc        : (219, 185)
+objects    : [(296, 200, 'Ammo')]
+respawn_in : -1
+score      : (500, 500)
+selected   : False
+step       : 9
+walls      : [[0, 0, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 0]]
+[(280, 216), (296, 200)]
+== Observation ==
+ammo       : 3
+angle      : 1.0471975511965974
+clicked    : None
+collided   : False
+c
+== LOG TRUNCATED TO 32KB ==

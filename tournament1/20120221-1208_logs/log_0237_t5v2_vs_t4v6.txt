@@ -1,0 +1,62 @@
+Domination Game Ver. 1.3.0
+Playing `CEREAL_KILLERS_VERSION_2 (t5v2.py)` vs. `Stormtrooper1 (t4v6.py)`
+Initializing agents.
+Step 10: 501 - 499
+Step 20: 497 - 503
+Step 30: 491 - 509
+Step 40: 481 - 519
+Step 50: 481 - 519
+Step 60: 485 - 515
+Step 70: 475 - 525
+Step 80: 469 - 531
+Step 90: 459 - 541
+Step 100: 429 - 571
+Step 110: 399 - 601
+Step 120: 369 - 631
+Step 130: 355 - 645
+Step 140: 349 - 651
+Step 150: 349 - 651
+Step 160: 359 - 641
+Step 170: 353 - 647
+Step 180: 343 - 657
+Step 190: 341 - 659
+Step 200: 351 - 649
+Step 210: 344 - 656
+Step 220: 334 - 666
+Step 230: 324 - 676
+Step 240: 314 - 686
+Step 250: 304 - 696
+Step 260: 294 - 706
+Step 270: 285 - 715
+Step 280: 279 - 721
+Step 290: 269 - 731
+Step 300: 259 - 741
+Step 310: 255 - 745
+Step 320: 251 - 749
+Step 330: 229 - 771
+Step 340: 203 - 797
+Step 350: 173 - 827
+Step 360: 153 - 847
+Step 370: 143 - 857
+Step 380: 133 - 867
+Step 390: 123 - 877
+Step 400: 113 - 887
+Step 410: 103 - 897
+Step 420: 93 - 907
+Step 430: 83 - 917
+Step 440: 81 - 919
+Step 450: 71 - 929
+Step 460: 67 - 933
+Step 470: 77 - 923
+Step 480: 73 - 927
+Step 490: 51 - 949
+Step 500: 21 - 979
+== GAME STATS ==
+ammo_blue       : 88
+ammo_red        : 20
+score           : 0.0
+score_blue      : 1000
+score_red       : 0
+steps           : 506
+think_time_blue : 2.1286520000126075
+think_time_red  : 4.890554999994038

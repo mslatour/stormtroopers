@@ -1,0 +1,64 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `Stormtrooper1 (t4v6.py)`
+Initializing agents.
+Step 10: 500 - 500
+Step 20: 510 - 490
+Step 30: 530 - 470
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 40: 540 - 460
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 50: 538 - 462
+Step 60: 561 - 439
+Step 70: 551 - 449
+Step 80: 561 - 439
+Step 90: 557 - 443
+Step 100: 567 - 433
+Step 110: 577 - 423
+Step 120: 607 - 393
+Step 130: 623 - 377
+Step 140: 653 - 347
+Step 150: 672 - 328
+Step 160: 690 - 310
+Step 170: 718 - 282
+Step 180: 734 - 266
+Step 190: 748 - 252
+Step 200: 772 - 228
+Step 210: 788 - 212
+Step 220: 807 - 193
+Step 230: 814 - 186
+Step 240: 836 - 164
+Step 250: 846 - 154
+Step 260: 870 - 130
+Step 270: 870 - 130
+Step 280: 854 - 146
+Step 290: 824 - 176
+[Game]: Agent RED-0 timed out (0.031s).
+Step 300: 804 - 196
+Step 310: 820 - 180
+Step 320: 836 - 164
+Step 330: 856 - 144
+Step 340: 878 - 122
+Step 350: 894 - 106
+Step 360: 904 - 96
+Step 370: 914 - 86
+Step 380: 924 - 76
+Step 390: 934 - 66
+Step 400: 960 - 40
+Step 410: 973 - 27
+Step 420: 985 - 15
+== GAME STATS ==
+ammo_blue       : 24
+ammo_red        : 57
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 425
+think_time_blue : 2.121567000001278
+think_time_red  : 13.35792300000503

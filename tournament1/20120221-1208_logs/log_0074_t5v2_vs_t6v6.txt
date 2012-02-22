@@ -1,0 +1,81 @@
+Domination Game Ver. 1.3.0
+Playing `CEREAL_KILLERS_VERSION_2 (t5v2.py)` vs. `BOOM_HEADSHOT (t6v6.py)`
+Initializing agents.
+Step 10: 499 - 501
+Step 20: 491 - 509
+Step 30: 511 - 489
+Step 40: 511 - 489
+Step 50: 511 - 489
+Step 60: 483 - 517
+Step 70: 461 - 539
+Step 80: 431 - 569
+Step 90: 401 - 599
+Step 100: 371 - 629
+Step 110: 361 - 639
+Step 120: 371 - 629
+Step 130: 353 - 647
+Step 140: 323 - 677
+Step 150: 293 - 707
+Step 160: 289 - 711
+Step 170: 281 - 719
+[Game]: Agent BLU-0 timed out (0.031s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.031s).
+Step 180: 289 - 711
+[Game]: Agent BLU-0 timed out (0.031s).
+Step 190: 302 - 698
+Step 200: 312 - 688
+Step 210: 337 - 663
+Step 220: 347 - 653
+Step 230: 357 - 643
+[Game]: Agent BLU-0 timed out (0.030s).
+[Game]: Agent BLU-0 timed out (0.030s).
+Step 240: 387 - 613
+Step 250: 404 - 596
+Step 260: 402 - 598
+Step 270: 388 - 612
+Step 280: 358 - 642
+Step 290: 332 - 668
+Step 300: 314 - 686
+Step 310: 288 - 712
+Step 320: 296 - 704
+Step 330: 320 - 680
+Step 340: 324 - 676
+Step 350: 315 - 685
+Step 360: 303 - 697
+Step 370: 273 - 727
+Step 380: 265 - 735
+[Game]: Agent BLU-0 timed out (0.030s).
+Step 390: 275 - 725
+[Game]: Agent BLU-0 timed out (0.031s).
+[Game]: Agent BLU-0 timed out (0.032s).
+Step 400: 269 - 731
+Step 410: 267 - 733
+Step 420: 290 - 710
+Step 430: 306 - 694
+Step 440: 278 - 722
+Step 450: 257 - 743
+Step 460: 227 - 773
+Step 470: 197 - 803
+Step 480: 167 - 833
+Step 490: 149 - 851
+Step 500: 157 - 843
+Step 510: 151 - 849
+Step 520: 121 - 879
+Step 530: 109 - 891
+Step 540: 101 - 899
+Step 550: 91 - 909
+Step 560: 77 - 923
+Step 570: 47 - 953
+Step 580: 25 - 975
+Step 590: 39 - 961
+Step 600: 56 - 944
+== GAME STATS ==
+ammo_blue       : 75
+ammo_red        : 49
+score           : 0.058
+score_blue      : 942
+score_red       : 58
+steps           : 600
+think_time_blue : 14.7320870000068
+think_time_red  : 7.60582099999624

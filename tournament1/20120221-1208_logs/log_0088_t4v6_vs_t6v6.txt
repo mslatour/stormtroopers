@@ -1,0 +1,181 @@
+Domination Game Ver. 1.3.0
+Playing `Stormtrooper1 (t4v6.py)` vs. `BOOM_HEADSHOT (t6v6.py)`
+Initializing agents.
+[Game]: Agent BLU-0 timed out (0.030s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+Step 10: 497 - 503
+[Game]: Agent BLU-0 timed out (0.035s).
+Step 20: 479 - 521
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.038s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.037s).
+Step 30: 449 - 551
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.037s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.037s).
+[Game]: Agent BLU-0 timed out (0.038s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.036s).
+Step 40: 431 - 569
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 50: 443 - 557
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.036s).
+Step 60: 453 - 547
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.036s).
+Step 70: 461 - 539
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.037s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 80: 471 - 529
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 90: 481 - 519
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+Step 100: 477 - 523
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 110: 497 - 503
+Step 120: 497 - 503
+Step 130: 493 - 507
+Step 140: 465 - 535
+Step 150: 435 - 565
+Step 160: 405 - 595
+Step 170: 393 - 607
+Step 180: 377 - 623
+Step 190: 357 - 643
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 200: 351 - 649
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.036s).
+Step 210: 361 - 639
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.039s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+Step 220: 355 - 645
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 230: 339 - 661
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.034s).
+Step 240: 325 - 675
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.033s).
+Step 250: 311 - 689
+Step 260: 281 - 719
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.033s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.032s).
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.036s).
+[Game]: Agent BLU-0 timed out (0.035s).
+Step 270: 257 - 743
+[Game]: Agent BLU-0 timed out (0.034s).
+[Game]: Agent BLU-0 timed out (0.035s).
+[Game]: Agent BLU-0 timed out (0.037s).
+[Game]: Agent BLU-0 timed out (0.033s).
+Step 280: 251 - 749
+Step 290: 231 - 769
+Step 300: 211 - 789
+Step 310: 181 - 819
+Step 320: 157 - 843
+Step 330: 141 - 859
+Step 340: 127 - 873
+Step 350: 97 - 903
+Step 360: 75 - 925
+Step 370: 55 - 945
+Step 380: 27 - 973
+Step 390: 5 - 995
+== GAME STATS ==
+ammo_blue       : 42
+ammo_red        : 50
+score           : 0.0
+score_blue      : 1000
+score_red       : 0
+steps           : 394
+think_time_blue : 29.852265000008856
+think_time_red  : 2.1990580000028785

@@ -1,0 +1,62 @@
+Domination Game Ver. 1.3.0
+Playing `my_agent (t1v2.py)` vs. `CEREAL_KILLERS_VERSION_2 (t5v2.py)`
+Initializing agents.
+Step 10: 500 - 500
+Step 20: 500 - 500
+Step 30: 494 - 506
+Step 40: 490 - 510
+Step 50: 505 - 495
+Step 60: 501 - 499
+Step 70: 476 - 524
+Step 80: 462 - 538
+Step 90: 448 - 552
+Step 100: 439 - 561
+Step 110: 442 - 558
+Step 120: 462 - 538
+Step 130: 470 - 530
+Step 140: 474 - 526
+Step 150: 484 - 516
+Step 160: 485 - 515
+Step 170: 497 - 503
+Step 180: 504 - 496
+Step 190: 518 - 482
+Step 200: 530 - 470
+Step 210: 550 - 450
+Step 220: 567 - 433
+Step 230: 584 - 416
+Step 240: 600 - 400
+Step 250: 602 - 398
+Step 260: 604 - 396
+Step 270: 613 - 387
+Step 280: 627 - 373
+Step 290: 636 - 364
+Step 300: 656 - 344
+Step 310: 674 - 326
+Step 320: 701 - 299
+Step 330: 723 - 277
+Step 340: 745 - 255
+Step 350: 761 - 239
+Step 360: 775 - 225
+Step 370: 797 - 203
+Step 380: 813 - 187
+Step 390: 800 - 200
+Step 400: 802 - 198
+Step 410: 826 - 174
+Step 420: 849 - 151
+Step 430: 865 - 135
+Step 440: 893 - 107
+Step 450: 913 - 87
+Step 460: 934 - 66
+Step 470: 948 - 52
+[Game]: Agent RED-5 timed out (0.088s).
+Step 480: 965 - 35
+Step 490: 985 - 15
+== GAME STATS ==
+ammo_blue       : 39
+ammo_red        : 80
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 496
+think_time_blue : 2.284405999983619
+think_time_red  : 1.3609110000031706

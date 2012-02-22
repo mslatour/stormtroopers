@@ -1,0 +1,72 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `warmain (t3v4.py)`
+Initializing agents.
+Step 10: 500 - 500
+Step 20: 502 - 498
+Step 30: 508 - 492
+Step 40: 512 - 488
+Step 50: 530 - 470
+Step 60: 557 - 443
+Step 70: 577 - 423
+Step 80: 587 - 413
+Step 90: 611 - 389
+Step 100: 639 - 361
+Step 110: 650 - 350
+Step 120: 652 - 348
+Step 130: 650 - 350
+Step 140: 642 - 358
+Step 150: 618 - 382
+Step 160: 596 - 404
+Step 170: 590 - 410
+Step 180: 600 - 400
+Step 190: 607 - 393
+Step 200: 615 - 385
+Step 210: 621 - 379
+Step 220: 625 - 375
+Step 230: 629 - 371
+Step 240: 635 - 365
+Step 250: 641 - 359
+Step 260: 646 - 354
+Step 270: 649 - 351
+Step 280: 659 - 341
+Step 290: 655 - 345
+Step 300: 629 - 371
+Step 310: 614 - 386
+Step 320: 613 - 387
+Step 330: 623 - 377
+Step 340: 628 - 372
+Step 350: 633 - 367
+Step 360: 641 - 359
+Step 370: 643 - 357
+Step 380: 644 - 356
+Step 390: 637 - 363
+Step 400: 619 - 381
+Step 410: 589 - 411
+Step 420: 575 - 425
+Step 430: 549 - 451
+Step 440: 539 - 461
+Step 450: 540 - 460
+Step 460: 550 - 450
+Step 470: 554 - 446
+Step 480: 545 - 455
+Step 490: 532 - 468
+Step 500: 529 - 471
+Step 510: 527 - 473
+Step 520: 529 - 471
+Step 530: 534 - 466
+Step 540: 539 - 461
+Step 550: 551 - 449
+Step 560: 574 - 426
+Step 570: 594 - 406
+Step 580: 604 - 396
+Step 590: 607 - 393
+Step 600: 596 - 404
+== GAME STATS ==
+ammo_blue       : 53
+ammo_red        : 68
+score           : 0.595
+score_blue      : 405
+score_red       : 595
+steps           : 600
+think_time_blue : 7.176142000001619
+think_time_red  : 12.76246000001629

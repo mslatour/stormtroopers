@@ -1,0 +1,38 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `CEREAL_KILLERS_VERSION_2 (t5v2.py)`
+Initializing agents.
+Step 10: 500 - 500
+Step 20: 501 - 499
+Step 30: 521 - 479
+Step 40: 543 - 457
+Step 50: 554 - 446
+Step 60: 570 - 430
+Step 70: 600 - 400
+Step 80: 630 - 370
+Step 90: 660 - 340
+Step 100: 690 - 310
+Step 110: 716 - 284
+Step 120: 736 - 264
+Step 130: 766 - 234
+Step 140: 786 - 214
+Step 150: 816 - 184
+[Game]: Agent RED-0 timed out (0.216s).
+Step 160: 840 - 160
+Step 170: 864 - 136
+Step 180: 871 - 129
+Step 190: 872 - 128
+Step 200: 872 - 128
+Step 210: 892 - 108
+Step 220: 908 - 92
+Step 230: 936 - 64
+Step 240: 966 - 34
+Step 250: 992 - 8
+== GAME STATS ==
+ammo_blue       : 20
+ammo_red        : 35
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 252
+think_time_blue : 2.051477000005889
+think_time_red  : 6.3038530000044375

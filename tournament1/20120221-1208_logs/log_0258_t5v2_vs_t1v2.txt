@@ -1,0 +1,47 @@
+Domination Game Ver. 1.3.0
+Playing `CEREAL_KILLERS_VERSION_2 (t5v2.py)` vs. `my_agent (t1v2.py)`
+Initializing agents.
+Step 10: 496 - 504
+Step 20: 495 - 505
+Step 30: 491 - 509
+Step 40: 485 - 515
+Step 50: 482 - 518
+Step 60: 464 - 536
+Step 70: 452 - 548
+Step 80: 441 - 559
+Step 90: 437 - 563
+Step 100: 437 - 563
+Step 110: 450 - 550
+Step 120: 456 - 544
+Step 130: 464 - 536
+Step 140: 479 - 521
+Step 150: 505 - 495
+Step 160: 527 - 473
+Step 170: 549 - 451
+Step 180: 577 - 423
+Step 190: 604 - 396
+Step 200: 624 - 376
+Step 210: 640 - 360
+Step 220: 665 - 335
+Step 230: 694 - 306
+Step 240: 718 - 282
+Step 250: 748 - 252
+Step 260: 772 - 228
+Step 270: 798 - 202
+Step 280: 818 - 182
+Step 290: 839 - 161
+Step 300: 862 - 138
+Step 310: 887 - 113
+Step 320: 906 - 94
+Step 330: 930 - 70
+Step 340: 955 - 45
+Step 350: 979 - 21
+== GAME STATS ==
+ammo_blue       : 22
+ammo_red        : 52
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 357
+think_time_blue : 0.71861299997272
+think_time_red  : 1.0908940000108487

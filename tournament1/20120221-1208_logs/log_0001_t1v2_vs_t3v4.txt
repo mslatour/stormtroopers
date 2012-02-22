@@ -1,0 +1,46 @@
+Domination Game Ver. 1.3.0
+Playing `my_agent (t1v2.py)` vs. `warmain (t3v4.py)`
+Initializing agents.
+Step 10: 500 - 500
+Step 20: 504 - 496
+Step 30: 517 - 483
+Step 40: 515 - 485
+Step 50: 529 - 471
+Step 60: 541 - 459
+Step 70: 546 - 454
+Step 80: 559 - 441
+Step 90: 562 - 438
+Step 100: 570 - 430
+Step 110: 589 - 411
+Step 120: 600 - 400
+Step 130: 626 - 374
+Step 140: 649 - 351
+Step 150: 679 - 321
+Step 160: 689 - 311
+Step 170: 711 - 289
+Step 180: 721 - 279
+Step 190: 742 - 258
+Step 200: 755 - 245
+Step 210: 785 - 215
+Step 220: 801 - 199
+Step 230: 803 - 197
+Step 240: 807 - 193
+Step 250: 833 - 167
+Step 260: 852 - 148
+Step 270: 873 - 127
+Step 280: 873 - 127
+Step 290: 893 - 107
+Step 300: 912 - 88
+Step 310: 929 - 71
+Step 320: 930 - 70
+Step 330: 946 - 54
+Step 340: 974 - 26
+== GAME STATS ==
+ammo_blue       : 5
+ammo_red        : 24
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 349
+think_time_blue : 1.8120610000000221
+think_time_red  : 0.08718300000002355

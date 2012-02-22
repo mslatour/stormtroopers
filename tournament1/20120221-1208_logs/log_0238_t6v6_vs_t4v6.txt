@@ -1,0 +1,365 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `Stormtrooper1 (t4v6.py)`
+Initializing agents.
+Step 10: 501 - 499
+Step 20: 495 - 505
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 30: 485 - 515
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 40: 462 - 538
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 50: 452 - 548
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+Step 60: 442 - 558
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 70: 432 - 568
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 80: 416 - 584
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.035s).
+[Game]: Agent RED-0 timed out (0.036s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 90: 388 - 612
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 100: 370 - 630
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 110: 360 - 640
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 120: 350 - 650
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 130: 340 - 660
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 140: 332 - 668
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 150: 330 - 670
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 160: 320 - 680
+[Game]: Agent RED-0 timed out (0.032s).
+Step 170: 310 - 690
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 180: 298 - 702
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 190: 268 - 732
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 200: 244 - 756
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 210: 214 - 786
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 220: 193 - 807
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 230: 164 - 836
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 240: 141 - 859
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 250: 131 - 869
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 260: 121 - 879
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 270: 111 - 889
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 280: 95 - 905
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 290: 75 - 925
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 300: 55 - 945
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 310: 49 - 951
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.035s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 320: 50 - 950
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 330: 56 - 944
+[Game]: Agent RED-0 timed out (0.030s).
+Step 340: 66 - 934
+Step 350: 83 - 917
+Step 360: 99 - 901
+Step 370: 109 - 891
+Step 380: 119 - 881
+Step 390: 135 - 865
+Step 400: 155 - 845
+Step 410: 178 - 822
+Step 420: 199 - 801
+Step 430: 213 - 787
+Step 440: 235 - 765
+Step 450: 249 - 751
+Step 460: 272 - 728
+Step 470: 282 - 718
+Step 480: 292 - 708
+Step 490: 302 - 698
+Step 500: 317 - 683
+Step 510: 347 - 653
+Step 520: 363 - 637
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 530: 367 - 633
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 540: 357 - 643
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 550: 335 - 665
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.034s).
+Step 560: 308 - 692
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.034s).
+[Game]: Agent RED-0 timed out (0.033s).
+Step 570: 283 - 717
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 580: 265 - 735
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.033s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+Step 590: 235 - 765
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.032s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.032s).
+Step 600: 210 - 790
+[Game]: Agent RED-0 timed out (0.031s).
+== GAME STATS ==
+ammo_blue       : 89
+ammo_red        : 51
+score           : 0.209
+score_blue      : 791
+score_red       : 209
+steps           : 600
+think_time_blue : 2.282759999989594
+think_time_red  : 43.57718999999406

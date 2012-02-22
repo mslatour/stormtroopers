@@ -1,0 +1,72 @@
+Domination Game Ver. 1.3.0
+Playing `Stormtrooper1 (t4v6.py)` vs. `BOOM_HEADSHOT (t6v6.py)`
+Initializing agents.
+Step 10: 493 - 507
+Step 20: 481 - 519
+Step 30: 471 - 529
+Step 40: 459 - 541
+Step 50: 443 - 557
+Step 60: 435 - 565
+Step 70: 408 - 592
+Step 80: 387 - 613
+Step 90: 393 - 607
+Step 100: 399 - 601
+Step 110: 407 - 593
+Step 120: 414 - 586
+Step 130: 420 - 580
+Step 140: 430 - 570
+Step 150: 440 - 560
+Step 160: 440 - 560
+Step 170: 430 - 570
+Step 180: 438 - 562
+Step 190: 446 - 554
+Step 200: 436 - 564
+Step 210: 426 - 574
+Step 220: 434 - 566
+Step 230: 424 - 576
+Step 240: 414 - 586
+Step 250: 404 - 596
+Step 260: 394 - 606
+Step 270: 372 - 628
+Step 280: 342 - 658
+Step 290: 336 - 664
+Step 300: 346 - 654
+Step 310: 374 - 626
+Step 320: 404 - 596
+Step 330: 434 - 566
+Step 340: 464 - 536
+Step 350: 494 - 506
+Step 360: 502 - 498
+Step 370: 492 - 508
+Step 380: 488 - 512
+Step 390: 478 - 522
+Step 400: 466 - 534
+Step 410: 436 - 564
+Step 420: 406 - 594
+Step 430: 390 - 610
+Step 440: 360 - 640
+Step 450: 330 - 670
+Step 460: 308 - 692
+Step 470: 298 - 702
+Step 480: 288 - 712
+Step 490: 272 - 728
+Step 500: 276 - 724
+Step 510: 262 - 738
+Step 520: 265 - 735
+Step 530: 265 - 735
+Step 540: 262 - 738
+Step 550: 248 - 752
+Step 560: 232 - 768
+Step 570: 226 - 774
+Step 580: 218 - 782
+Step 590: 218 - 782
+Step 600: 228 - 772
+== GAME STATS ==
+ammo_blue       : 73
+ammo_red        : 67
+score           : 0.229
+score_blue      : 771
+score_red       : 229
+steps           : 600
+think_time_blue : 16.20508300000347
+think_time_red  : 1.421623000017462

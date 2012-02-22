@@ -1,0 +1,61 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `CEREAL_KILLERS_VERSION_2 (t5v2.py)`
+Initializing agents.
+Step 10: 501 - 499
+[Game]: Agent RED-0 timed out (0.030s).
+Step 20: 505 - 495
+Step 30: 516 - 484
+Step 40: 531 - 469
+Step 50: 543 - 457
+Step 60: 556 - 444
+Step 70: 586 - 414
+Step 80: 612 - 388
+Step 90: 635 - 365
+Step 100: 633 - 367
+[Game]: Agent RED-0 timed out (0.030s).
+Step 110: 614 - 386
+Step 120: 616 - 384
+Step 130: 625 - 375
+Step 140: 645 - 355
+Step 150: 657 - 343
+Step 160: 651 - 349
+Step 170: 671 - 329
+Step 180: 697 - 303
+Step 190: 715 - 285
+Step 200: 731 - 269
+Step 210: 752 - 248
+[Game]: Agent RED-0 timed out (0.031s).
+Step 220: 748 - 252
+Step 230: 770 - 230
+Step 240: 783 - 217
+Step 250: 806 - 194
+Step 260: 825 - 175
+Step 270: 821 - 179
+Step 280: 809 - 191
+Step 290: 803 - 197
+Step 300: 822 - 178
+Step 310: 843 - 157
+Step 320: 867 - 133
+Step 330: 892 - 108
+Step 340: 912 - 88
+Step 350: 923 - 77
+Step 360: 940 - 60
+Step 370: 963 - 37
+Step 380: 962 - 38
+Step 390: 952 - 48
+Step 400: 976 - 24
+Step 410: 996 - 4
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+[Game]: Agent RED-0 timed out (0.031s).
+[Game]: Agent RED-0 timed out (0.030s).
+Step 420: 995 - 5
+== GAME STATS ==
+ammo_blue       : 39
+ammo_red        : 59
+score           : 1.0
+score_blue      : 0
+score_red       : 1000
+steps           : 424
+think_time_blue : 3.991897999990215
+think_time_red  : 14.628905000022314

@@ -1,0 +1,72 @@
+Domination Game Ver. 1.3.0
+Playing `BOOM_HEADSHOT (t6v6.py)` vs. `CEREAL_KILLERS_VERSION_2 (t5v2.py)`
+Initializing agents.
+Step 10: 501 - 499
+Step 20: 497 - 503
+Step 30: 517 - 483
+Step 40: 535 - 465
+Step 50: 562 - 438
+Step 60: 547 - 453
+Step 70: 540 - 460
+Step 80: 560 - 440
+Step 90: 558 - 442
+Step 100: 546 - 454
+Step 110: 560 - 440
+Step 120: 576 - 424
+Step 130: 599 - 401
+Step 140: 621 - 379
+Step 150: 613 - 387
+Step 160: 598 - 402
+Step 170: 588 - 412
+Step 180: 602 - 398
+Step 190: 602 - 398
+Step 200: 614 - 386
+Step 210: 608 - 392
+Step 220: 603 - 397
+Step 230: 613 - 387
+Step 240: 623 - 377
+Step 250: 620 - 380
+Step 260: 622 - 378
+Step 270: 620 - 380
+Step 280: 603 - 397
+Step 290: 599 - 401
+Step 300: 625 - 375
+Step 310: 649 - 351
+Step 320: 651 - 349
+Step 330: 676 - 324
+Step 340: 698 - 302
+Step 350: 720 - 280
+Step 360: 718 - 282
+Step 370: 712 - 288
+Step 380: 736 - 264
+Step 390: 748 - 252
+Step 400: 754 - 246
+Step 410: 768 - 232
+Step 420: 793 - 207
+Step 430: 811 - 189
+Step 440: 803 - 197
+Step 450: 801 - 199
+Step 460: 790 - 210
+Step 470: 784 - 216
+Step 480: 774 - 226
+Step 490: 763 - 237
+Step 500: 779 - 221
+Step 510: 804 - 196
+Step 520: 824 - 176
+Step 530: 845 - 155
+Step 540: 863 - 137
+Step 550: 853 - 147
+Step 560: 836 - 164
+Step 570: 850 - 150
+Step 580: 836 - 164
+Step 590: 840 - 160
+Step 600: 863 - 137
+== GAME STATS ==
+ammo_blue       : 49
+ammo_red        : 89
+score           : 0.866
+score_blue      : 134
+score_red       : 866
+steps           : 600
+think_time_blue : 2.436248000008163
+think_time_red  : 8.482993000001443

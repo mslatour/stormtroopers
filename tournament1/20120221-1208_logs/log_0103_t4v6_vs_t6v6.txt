@@ -1,0 +1,42 @@
+Domination Game Ver. 1.3.0
+Playing `Stormtrooper1 (t4v6.py)` vs. `BOOM_HEADSHOT (t6v6.py)`
+Initializing agents.
+Step 10: 496 - 504
+Step 20: 486 - 514
+Step 30: 476 - 524
+Step 40: 470 - 530
+Step 50: 468 - 532
+Step 60: 440 - 560
+Step 70: 434 - 566
+Step 80: 420 - 580
+Step 90: 398 - 602
+Step 100: 372 - 628
+Step 110: 354 - 646
+Step 120: 354 - 646
+Step 130: 334 - 666
+Step 140: 332 - 668
+Step 150: 324 - 676
+Step 160: 298 - 702
+Step 170: 270 - 730
+Step 180: 255 - 745
+Step 190: 233 - 767
+Step 200: 221 - 779
+Step 210: 191 - 809
+Step 220: 169 - 831
+Step 230: 142 - 858
+Step 240: 122 - 878
+Step 250: 130 - 870
+Step 260: 108 - 892
+Step 270: 84 - 916
+Step 280: 54 - 946
+Step 290: 32 - 968
+Step 300: 2 - 998
+== GAME STATS ==
+ammo_blue       : 36
+ammo_red        : 44
+score           : 0.0
+score_blue      : 1000
+score_red       : 0
+steps           : 300
+think_time_blue : 10.07006399999409
+think_time_red  : 0.9047020000045904

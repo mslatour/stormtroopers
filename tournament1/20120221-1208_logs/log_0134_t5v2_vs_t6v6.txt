@@ -1,0 +1,34 @@
+Domination Game Ver. 1.3.0
+Playing `CEREAL_KILLERS_VERSION_2 (t5v2.py)` vs. `BOOM_HEADSHOT (t6v6.py)`
+Initializing agents.
+Step 10: 499 - 501
+Step 20: 496 - 504
+Step 30: 499 - 501
+Step 40: 483 - 517
+Step 50: 457 - 543
+Step 60: 427 - 573
+Step 70: 397 - 603
+Step 80: 367 - 633
+Step 90: 347 - 653
+Step 100: 318 - 682
+Step 110: 299 - 701
+Step 120: 269 - 731
+Step 130: 241 - 759
+Step 140: 211 - 789
+Step 150: 181 - 819
+Step 160: 153 - 847
+Step 170: 128 - 872
+Step 180: 102 - 898
+Step 190: 80 - 920
+Step 200: 69 - 931
+Step 210: 45 - 955
+Step 220: 15 - 985
+== GAME STATS ==
+ammo_blue       : 35
+ammo_red        : 17
+score           : 0.0
+score_blue      : 1000
+score_red       : 0
+steps           : 224
+think_time_blue : 7.947183000005452
+think_time_red  : 2.635169999999107
