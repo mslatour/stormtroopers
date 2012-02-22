@@ -23,7 +23,7 @@ AGENT_MAPPINGS = {
 }
 
 class MyScenario(domination.run.Scenario):
-  REPEATS = 20
+  REPEATS = 50
 
 def applySettings(args):
   settings = DEFAULT_RUN_SETTINGS

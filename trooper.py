@@ -429,9 +429,9 @@ class Agent(object):
           action = self.action_normal()
       else:
         self.debugMsg("Goal already found: (%d,%d)" % self.goal)
-    except Exception as exp:
-      self.debugMsg("Goal: %s, exception: %s" % (self.goal, exp), True)
+    except Exception:
       self.goal = None
+#      self.debugMsg("Goal: %s, exception: %s" % (self.goal, exp), True)
     
     if self.goal is None:
       self.goal = obs.loc
