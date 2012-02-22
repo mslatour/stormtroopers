@@ -1,12 +1,14 @@
 import domination.run
 import sys
+import pickle
 
 DEFAULT_RUN_SETTINGS = {
   'agent': "default",
   'mode': "test",
   'verbose': "True",
   'render': "True",
-  'output': None
+  'output': None,
+  'replay': None
 }
 
 DEFAULT_OPPONENT = "domination/agent.py"
@@ -38,19 +40,23 @@ def applySettings(args):
   return settings
 
 def run(settings):
-  try:
-    {
-      "test" : lambda x: MyScenario.test(
-        AGENT_MAPPINGS[x["agent"]], DEFAULT_OPPONENT
-      ),
-      "one_on_one" : lambda x: MyScenario.one_on_one(
-        AGENT_MAPPINGS[x["agent"]], 
-        DEFAULT_OPPONENT,
-        x["output"]
-      )
-    }[settings["mode"]](settings)
-  except KeyError:
-    print "Unsupported option, check --help for valid options"
+  if settings["mode"] == "replay":
+    replay = pickle.loads(settings["replay"])
+    replay.play()
+  else:
+    try:
+      {
+        "test" : lambda x: MyScenario.test(
+          AGENT_MAPPINGS[x["agent"]], DEFAULT_OPPONENT
+        ),
+        "one_on_one" : lambda x: MyScenario.one_on_one(
+          AGENT_MAPPINGS[x["agent"]], 
+          DEFAULT_OPPONENT,
+          x["output"]
+        )
+      }[settings["mode"]](settings)
+    except KeyError:
+      print "Unsupported option, check --help for valid options"
 
 if __name__ == "__main__":
   if len(sys.argv) == 2 and sys.argv[1] == "--help":
@@ -59,9 +65,10 @@ if __name__ == "__main__":
     print " .-------------------------------------------------------------."
     print " | Setting:  | Default:  | Values:                             |"
     print " |-------------------------------------------------------------|"
+    print " | --replay  | None      | Path to pickle file                 |"
     print " | --agent   | default   | {default|sander|frank|daniel|sicco  |"
     print " |                          offence|defence|reactive}          |"
-    print " | --mode    | test      | {test|one_on_one}                   |"
+    print " | --mode    | test      | {test|one_on_one|replay}            |"
     print " | --output  | None      | A valid directory                   |"
     print " | --verbose | True      | {True|False}                        |"
     print " | --render  | True      | {True|False}                        |"
