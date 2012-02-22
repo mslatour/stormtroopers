@@ -34,7 +34,7 @@ class Scenario(object):
     #: The field that these games will be played on
     GENERATOR   = core.FieldGenerator() #: Will generate FIELD before each game if defined
     FIELD       = None   #: Will play on this field if GENERATOR is None
-    REPEATS     = 10     #: How many times to repeat each game
+    REPEATS     = 2      #: How many times to repeat each game
     SWAP_TEAMS  = True   #: Repeat each run with blue/red swapped
     DRAW_MARGIN = 0.05
             
@@ -76,7 +76,7 @@ class Scenario(object):
         game = core.Game(red, blue, 
                     red_init=red_init, blue_init=blue_init,
                     field=self.FIELD, settings=self.SETTINGS,
-                    record=True, verbose=True, rendered=False)
+                    record=True, verbose=False, rendered=False)
         if rendered:
             game.add_renderer()
         game.run()
@@ -86,7 +86,7 @@ class Scenario(object):
         if 'blob' in blue_init:
             blue_init['blob'].close()
         self.after_each(game)
-        return (game.stats, game.replay)
+        return game
         
         
     def _multi(self, teams, output_folder=None, rendered=False):
@@ -100,12 +100,12 @@ class Scenario(object):
             teams = teams + [(b, r) for (r, b) in teams]
         # Run the games
         gameinfo = []
-        print '\n'.join("%r vs. %r"%(r,b) for (r, b) in teams)
+        # print '\n'.join("%r vs. %r"%(r,b) for (r, b) in teams)
         for i, (red, blue) in enumerate(teams):
-            (stats, replay) = self._single(red, blue, rendered=rendered)
+            game = self._single(red, blue, rendered=rendered)
             print "======= Game %d/%d done. =======" % (i+1, len(teams))
-            print stats
-            gameinfo.append((red, blue, stats, replay))
+            print game.stats
+            gameinfo.append((red, blue, game.stats, game.replay, game.log))
             
         if output_folder is not None:
             self._write(gameinfo, output_folder)
@@ -126,8 +126,9 @@ class Scenario(object):
         csvf.writerow(dict(zip(fieldnames, fieldnames)))
         # Create a zip with the replays
         zipf = zipfile.ZipFile(fn+'_replays.zip','w')
+        logs = zipfile.ZipFile(fn+'_logs.zip','w')
             
-        for i, (r, b, stats, replay) in enumerate(gameinfo):
+        for i, (r, b, stats, replay, log) in enumerate(gameinfo):
             # Write to the csv file
             s = stats.__dict__
             s.update([('red_file',r),('blue_file',b)])
@@ -136,8 +137,10 @@ class Scenario(object):
             r = os.path.splitext(os.path.basename(r))[0]
             b = os.path.splitext(os.path.basename(b))[0]
             zipf.writestr('replay_%04d_%s_vs_%s.pickle'%(i, r, b), pickle.dumps(replay, pickle.HIGHEST_PROTOCOL))
-                
+            logs.writestr('log_%04d_%s_vs_%s.txt'%(i,r,b), log.truncated(kbs=1))
+        
         zipf.close()
+        logs.close()
         
         # Write summary
         sf = open(fn+'_summary.md','w')
@@ -146,7 +149,7 @@ class Scenario(object):
         by_match = defaultdict(lambda: [0, 0])
         by_team = defaultdict(lambda: 0)
         # Compile scores by color/team/matchup
-        for (r, b, stats, _) in gameinfo:
+        for (r, b, stats, _, _) in gameinfo:
             if abs(stats.score - 0.5) < self.DRAW_MARGIN:
                 points_red, points_blue = (1, 1)
             elif stats.score > 0.5:
@@ -206,7 +209,7 @@ class Scenario(object):
         scen._multi([(red, blue)], output_folder=output_folder)
         
     @classmethod
-    def tournament(cls, agents=None, folder=None, output_folder=None):
+    def tournament(cls, folder=None, agents=None, output_folder=None):
         """ Runs a full tournament between the agents specified,
             respecting the REPEATS and SWAP_TEAMS settings.
         
@@ -239,7 +242,6 @@ def markdown_table(body, header=None):
     if header:
         body = [header] + body
     maxlen = [max(len(str(cell)) for cell in col) for col in zip(*body)]
-    print maxlen
     if header:
         s += makerow(body[0])
         s += '|'+'|'.join('-'*(m+2) for m in maxlen)+'|\n'

@@ -40,8 +40,11 @@ def applySettings(args):
   return settings
 
 def run(settings):
-  if settings["mode"] == "replay":
-    replay = pickle.loads(settings["replay"])
+  print settings
+  if settings["replay"] is not None:
+    #replay = pickle.loads(settings["replay"])
+    #replay.play()
+    replay = pickle.load(open(settings["replay"], 'rb'))
     replay.play()
   else:
     try:
