@@ -243,7 +243,7 @@ class Brain(db.Model):
     uncertainty  = db.FloatProperty(default=30.0)
     conservative = db.FloatProperty(default=0.0)
     active       = db.BooleanProperty(default=False)
-    games_played = db.IntegerProperty(default=1)
+    games_played = db.IntegerProperty(default=0)
     num_errors   = db.IntegerProperty(default=0)
     # Identity
     group   = db.ReferenceProperty(Group, required=True)
@@ -268,10 +268,7 @@ class Brain(db.Model):
         kwargs['version'] = team.brain_ver + 1
         kwargs['group'] = team.group
         # Try to extract a name
-        namerx = r'NAME *= *[\'\"]([a-zA-Z0-9\-\_ ]+)[\'\"]'
-        match = re.search(r'NAME *= *[\'\"]([a-zA-Z0-9\-\_ ]+)[\'\"]', source)
-        if match:
-            kwargs['name'] = match.groups(1)[0]
+        kwargs['name'] = domcore.Team(source).name_internal
         # Create entity and put
         brain = cls(team=team, source=source, parent=team.group, **kwargs)
         team.brain_ver += 1
@@ -369,8 +366,8 @@ class Game(db.Model):
             blue_init = {'blob':blue.data_reader()}
         else:
             blue_init = {}
-        dg = domcore.Game(red_brain_string=red.source,
-                          blue_brain_string=blue.source,
+        dg = domcore.Game(red=domcore.Team(red.source, name=red.identifier()),
+                          blue=domcore.Team(blue.source, name=blue.identifier()),
                           red_init=red_init,
                           blue_init=blue_init,
                           settings=settings,
@@ -405,23 +402,20 @@ class Game(db.Model):
         replaykey = files.blobstore.get_blob_key(blobfile)
         
         # Truncate game log if needed
-        log = str(dg.log)
-        if len(log) > 16*1024:
-            msg = "\n== LOG TRUNCATED TO 16KB ==\n"
-            log = log[:16*1024-len(msg)] + msg
+        log = dg.log.truncated()
         
         # Adjust agent scores:
         logging.info("Storing game.")
-        red.played_game(red_new, error=dg.red_raised_exception)
-        blue.played_game(blue_new, error=dg.blue_raised_exception)
+        red.played_game(red_new, error=dg.red.raised_exception)
+        blue.played_game(blue_new, error=dg.blue.raised_exception)
         
         # Store stuff
         game = cls(red=red, 
                    blue=blue,
                    score_red=stats.score_red,
                    score_blue=stats.score_blue,
-                   error_red=dg.red_raised_exception,
-                   error_blue=dg.blue_raised_exception,
+                   error_red=dg.red.raised_exception,
+                   error_blue=dg.blue.raised_exception,
                    red_score_diff=red_new[0] - red_score[0],
                    blue_score_diff=blue_new[0] - blue_score[0],
                    stats=repr(dg.stats.__dict__), 

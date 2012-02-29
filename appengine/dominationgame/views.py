@@ -157,6 +157,25 @@ def download_data(request, groupslug, data_id):
         response['X-AppEngine-BlobKey'] = braindata.blob.key()
         return response
     return HttpResponseNotFound()
+    
+    
+def games_csv(request, groupslug):
+    csv = memcache.get('games_csv')
+    if csv is None:
+        csv = 'time,red,blue,score_red,score_blue\n'
+        for game in models.Game.all().ancestor(request.group).order('-added'):
+            csv += '%s,%d,%d,%d,%d\n' % (game.added, game.red.key().id(), game.blue.key().id(), game.score_red, game.score_blue)
+        memcache.add('games_csv', csv, 3600)
+    return HttpResponse(csv,content_type='text/plain')
+    
+def brains_csv(request, groupslug):
+    csv = memcache.get('brains_csv')
+    if csv is None:
+        csv = 'time,id,team,name\n'
+        for brain in models.Brain.all().ancestor(request.group):
+            csv += '%s,%d,%s,%s\n' % (brain.added, brain.key().id(), brain.identifier(), brain.name)
+        memcache.add('brains_csv', csv, 3600)
+    return HttpResponse(csv,content_type='text/plain')    
 
 
 @team_required
@@ -266,10 +285,13 @@ def laddermatch(request):
         brains = group.brain_set.filter("active", True).fetch(10000)
         msg += '== Group %s ==\n'%(group)
         if brains:
-            one = random.choice(brains)
+            brains = sorted(brains,key=lambda b: (b.games_played, b.last_played))
+            one = brains[0]
             brains = filter(lambda two: two != one, brains)
             if brains:
                 two = random.choice(brains)
+                if random.random() < 0.5:
+                    one, two = two, one
                 # Execute now if this is a direct request, queue if cron
                 if 'X-AppEngine-Cron' in request.META:
                     deferred.defer(models.Game.play, group.key(), one.key(), two.key())
